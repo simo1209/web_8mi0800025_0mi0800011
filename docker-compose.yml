@@ -1,0 +1,37 @@
+version: '3.8'
+
+services:
+  app:
+    build:
+      context: .            # Current directory
+      dockerfile: Dockerfile
+    container_name: php_app
+    ports:
+      - "8080:80"           # Host port 8080 -> Container port 80
+    volumes:
+      - ./public:/var/www/html # Mount local source for development
+      - ./src:/var/www/html/src # Mount local source for development
+    depends_on:
+      - db
+    # Optional environment variables, e.g. for DB credentials if needed:
+    environment:
+      - DATABASE_HOST=db
+      - DATABASE_NAME=mydb
+      - DATABASE_USER=myuser
+      - DATABASE_PASSWORD=mypass
+
+  db:
+    image: postgres:15
+    container_name: postgres_db
+    environment:
+      POSTGRES_USER: myuser
+      POSTGRES_PASSWORD: mypass
+      POSTGRES_DB: mydb
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+
+volumes:
+  db_data:
+
