@@ -17,9 +17,12 @@ COPY config/apache.conf /etc/apache2/sites-available/000-default.conf
 # COPY src/ /var/www/html/
 COPY public/ /var/www/html/
 COPY src/ /var/www/html/src/
+COPY uploads/ /var/www/html/uploads/
+
 
 # Adjust ownership and permissions if necessary
 RUN chown -R www-data:www-data /var/www/html
+RUN chmod -R 755 /var/www/html
 
 # Expose port 80 (not strictly necessary in Dockerfile if using docker-compose)
 EXPOSE 80

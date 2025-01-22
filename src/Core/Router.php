@@ -6,49 +6,50 @@ class Router
     private $routes = [];
 
     /**
-     * Register a route with a callable function for a specific HTTP method.
+     * Register a route with a callable function for a specific command.
      *
      * @param string   $method
-     * @param string   $path
+     * @param string   $command
      * @param callable $handler
      * @return void
      */
-    public function register($method, $path, $handler)
+    public function register($method, $command, $handler)
     {
         $method = strtoupper($method); // Normalize method to uppercase
-        // Convert path parameters like {id} into regex patterns
-        $path = preg_replace('/\{([a-zA-Z0-9_]+)\}/', '(?P<$1>[a-zA-Z0-9_-]+)', $path);
-        $this->routes[$method][$path] = $handler;
+        $this->routes[$method][$command] = $handler;
     }
 
     /**
-     * Resolve the current path (or a given path) and call the matching handler.
+     * Resolve the current command and call the matching handler.
      *
-     * @param string $path
+     * @param string $command
      * @param string $method
      * @return void
      */
-    public function resolve($path, $method)
+    public function resolve($command, $method)
     {
         $method = strtoupper($method); // Normalize method to uppercase
-        $path = $path === '' ? '/' : $path; // Treat empty paths as "/"
 
-        if (!isset($this->routes[$method])) {
+        if (!isset($this->routes[$method][$command])) {
             $this->notFound();
             return;
         }
 
-        foreach ($this->routes[$method] as $route => $handler) {
-            $pattern = "~^" . $route . "$~"; // Build regex pattern for route
-            if (preg_match($pattern, $path, $matches)) {
-                // Filter only named parameters from the matches
-                $params = array_filter($matches, 'is_string', ARRAY_FILTER_USE_KEY);
-                call_user_func($handler, $params);
-                return;
-            }
-        }
+        $handler = $this->routes[$method][$command];
+        $response = call_user_func($handler, $_REQUEST, $_FILES ?? []);
+        $this->sendResponse($response);
+    }
 
-        $this->notFound();
+    /**
+     * Send a JSON response.
+     *
+     * @param array $response
+     * @return void
+     */
+    private function sendResponse($response)
+    {
+        header('Content-Type: application/json');
+        echo json_encode($response);
     }
 
     /**
@@ -59,7 +60,17 @@ class Router
     private function notFound()
     {
         header('HTTP/1.1 404 Not Found');
-        echo "404 - Page Not Found";
+        echo json_encode(["error" => "404 - Page Not Found"]);
+    }
+
+    /**
+     * Send a 400 invalid request response.
+     *
+     * @return void
+     */
+    private function invalidRequest()
+    {
+        header('HTTP/1.1 400 Bad Request');
+        echo json_encode(["error" => "Invalid Request"]);
     }
 }
-

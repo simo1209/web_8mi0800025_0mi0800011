@@ -2,7 +2,7 @@ const frontpageGallery = document.querySelector('#frontpage-gallery');
 const imageCardTemplate = document.querySelector('#image-card-template');
 
 try {
-  let images_request = await fetch('/images.json');
+  let images_request = await fetch('/app.php?json_rpc={"command": "get_images", "params": {}}');
   let images = await images_request.json();
 
   for (const image of images) {

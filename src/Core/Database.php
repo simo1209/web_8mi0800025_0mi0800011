@@ -171,7 +171,8 @@ class Database
     {
         // enclose columns in backticks
         $columns = array_map(function($column) {
-            return '`' . trim($column, '`') . '`';
+            // return '`' . trim($column, '`') . '`';
+            return trim($column, '`');
         }, array_keys($data));
 
         //add columns into comma seperated string
