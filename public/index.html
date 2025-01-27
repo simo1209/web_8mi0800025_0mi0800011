@@ -5,6 +5,43 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gallery</title>
     <link rel="stylesheet" href="css/bootstrap.min.css">
+    <style>
+
+      body {
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh;
+        margin: 0;
+      }
+
+
+      main {
+        flex: 1;
+      }
+
+      footer {
+        background-color: #212529;
+        color: white;
+      }
+
+      footer h5 {
+        font-size: 1.25rem; /* Adjust heading size for smaller screens */
+      }
+
+      footer p, footer a {
+        font-size: 0.9rem; /* Smaller text for mobile devices */
+      }
+
+      @media (max-width: 576px) {
+        footer {
+          text-align: center; /* Center-align all content for smaller devices */
+        }
+
+        footer .text-md-end {
+          text-align: center !important;
+        }
+      }
+    </style>
 </head>
 
 <body>
@@ -14,14 +51,12 @@
             <div class="row">
               <div class="col-sm-8 col-md-7 py-4">
                 <h4>За проекта</h4>
-                <p class="text-body-secondary">Проектът представлява уеб приложение за управление и визуализация на снимки с GPS координати. То позволява на потребителите да качват снимки, да ги позиционират върху карти (публични или персонализирани), и да редактират или премахват координатите. Снимките могат да бъдат маркирани като публични или частни, организирани в албуми и споделяни временно или ограничено. Включва възможност за импорт/експорт на снимки с придружаваща информация във формати JSON или CSV и предоставя административни функции за модериране на съдържание.</p>
+                <p class="text-body-secondary">Проектът е съвместна работа на Боян Иванов (факултетен номер: 0MI0800011) и Симеон Георгиев (факултетен номер: 8MI0800025). Основната идея е да създадем приложение, което улеснява управлението на снимки, като позволява тяхното позициониране върху карта, редакция на GPS координати, контрол на достъпа (публични или частни снимки), както и лесен импорт и експорт на снимки с метаданни. Целта ни е да съчетаем удобство и функционалност за потребителите.</p>
               </div>
               <div class="col-sm-4 offset-md-1 py-4">
-                <h4>Контакти</h4>
+                <h4>Връзки</h4>
                 <ul class="list-unstyled">
-                  <li><a href="#" class="text-white">Follow on GitHub</a></li>
-                  <li><a href="#" class="text-white">Like on Facebook</a></li>
-                  <li><a href="#" class="text-white">Email me</a></li>
+                  <li><a href="https://www.pic2map.com/" class="text-white">Вдъхновение за идеята</a></li>
                 </ul>
               </div>
             </div>
@@ -84,8 +119,43 @@
         </div>
       </div>
     </template>
+
+
+
     <script src="js/bootstrap.min.js"></script>
     <script src="js/gallery.js" type="module"></script>
+
+
+    <footer class="text-bg-dark py-4">
+      <div class="container">
+        <div class="row">
+          <!-- About the Project -->
+          <div class="col-md-6 mb-3 mb-md-0">
+            <h5>About the Project</h5>
+            <p class="text-white">
+              This project is a collaboration between Boyan Ivanov and Simeon Georgiev, aiming to create an intuitive photo management app with map-based photo positioning, privacy control, and easy import/export options.
+            </p>
+          </div>
+          <!-- Quick Links -->
+          <div class="col-md-3 mb-3 mb-md-0">
+            <h5>Quick Links</h5>
+            <ul class="list-unstyled">
+              <li><a href="/upload.html" class="text-white text-decoration-none">Upload Photo</a></li>
+              <li><a href="#" class="text-white text-decoration-none">Login</a></li>
+              <li><a href="https://www.pic2map.com/" class="text-white text-decoration-none">Inspiration</a></li>
+            </ul>
+          </div>
+          <!-- Contact Us -->
+          <div class="col-md-3 text-md-end">
+            <h5>Contact Us</h5>
+            <p class="text-white mb-1">For inquiries:
+              <a href="mailto:info@photomap.com" class="text-white text-decoration-none">info@photomap.com</a>
+            </p>
+            <p class="text-white mb-0">&copy; 2025 Photo Map. All rights reserved.</p>
+          </div>
+        </div>
+      </div>
+    </footer>
 </body>
 
 </html>
