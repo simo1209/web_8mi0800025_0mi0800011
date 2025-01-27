@@ -64,7 +64,8 @@ class UserController
         session_start();
         $_SESSION['user_id'] = $user['id'];
         $_SESSION['session_token'] = $sessionToken;
-        
+
+        header('Location: /');
         return ['msg' => 'User created successfully', 'session_token' => $sessionToken];
     }
     
@@ -86,8 +87,8 @@ class UserController
         }
     
         // Verify the password
-        if (!password_verify(password_hash($data['password'], PASSWORD_BCRYPT), $user['password'])) {
-            return ['err' => 'Incorrect password'];
+        if (!password_verify($data['password'], $user['password'])) {
+            return ['err' => 'Incorrect password', $data['password']];
         }
     
         // Create a new session token
@@ -110,6 +111,8 @@ class UserController
         $_SESSION['user_id'] = $user['id'];
         $_SESSION['session_token'] = $sessionToken;
         // header("Authorization: Bearer $sessionToken");
+
+        header('Location: /');
 
         return ['msg' => 'Login successful', 'session_token' => $sessionToken];
     }
