@@ -22,6 +22,8 @@ class AlbumController
     {
         $router->register('GET', '/albums', [$this, 'index']); // List all albums
         $router->register('GET', '/albums/{id}', [$this, 'show']); // Show a specific album
+        $router->register('GET', 'my_albums', [$this, 'getMyAlbums']);
+        $router->register('GET', 'album_images', [$this, 'getAlbumImages']);
         $router->register('POST', '/albums', [$this, 'create']); // Create a new album
         $router->register('PUT', '/albums/{id}', [$this, 'update']); // Update a specific album
         $router->register('DELETE', '/albums/{id}', [$this, 'delete']); // Delete a specific album
@@ -49,6 +51,49 @@ class AlbumController
         // Ensure no further output is sent
         exit();
     }
+
+    public function getMyAlbums($params)
+    {
+        session_start();
+        $userId = $_SESSION['user_id'] ?? null;
+
+        if (!$userId) {
+            http_response_code(401);
+            return ['error' => 'Unauthorized'];
+        }
+
+        $albums = $this->db->rows("SELECT * FROM albums WHERE owner_id = :owner_id", ['owner_id' => $userId]);
+
+        return $albums;
+    }
+
+    public function getAlbumImages($params)
+    {
+        $albumId = $params['album_id'] ?? null;
+
+        if (!$albumId) {
+            http_response_code(400);
+            return ['error' => 'Album ID is required'];
+        }
+
+        // Join the albums table to fetch the album name
+        $images = $this->db->rows(
+            "SELECT
+                images.id AS id,
+                images.dbname AS dbname,
+                images.descr AS descr,
+                images.created_at AS created_at,
+                albums.name AS album_name,
+                albums.id AS album_id
+             FROM images
+             JOIN albums ON images.album_id = albums.id
+             WHERE images.album_id = :album_id",
+            ['album_id' => $albumId]
+        );
+
+        return $images;
+    }
+
 
     /**
      * Show a specific album.

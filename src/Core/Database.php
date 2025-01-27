@@ -109,7 +109,7 @@ class Database
      * @param  object $fetchMode set return mode ie object or array
      * @return object            returns multiple records
      */
-    public function rows($sql, $args = [], $fetchMode = PDO::FETCH_OBJ)
+    public function rows($sql, $args = [], $fetchMode = PDO::FETCH_ASSOC)
     {
         return $this->run($sql, $args)->fetchAll($fetchMode);
     }
@@ -122,7 +122,7 @@ class Database
      * @param  object $fetchMode set return mode ie object or array
      * @return object            returns single record
      */
-    public function row($sql, $args = [], $fetchMode = PDO::FETCH_OBJ)
+    public function row($sql, $args = [], $fetchMode = PDO::FETCH_ASSOC)
     {
         return $this->run($sql, $args)->fetch($fetchMode);
     }

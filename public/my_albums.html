@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Albums</title>
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+
+
+    <style>
+
+        body {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            margin: 0;
+        }
+
+
+        main {
+            flex: 1;
+        }
+
+        footer {
+            background-color: #212529;
+            color: white;
+        }
+
+        footer h5 {
+            font-size: 1.25rem; /* Adjust heading size for smaller screens */
+        }
+
+        footer p, footer a {
+            font-size: 0.9rem; /* Smaller text for mobile devices */
+        }
+
+        @media (max-width: 576px) {
+            footer {
+                text-align: center; /* Center-align all content for smaller devices */
+            }
+
+            footer .text-md-end {
+                text-align: center !important;
+            }
+        }
+    </style>
+</head>
+
+<body>
+<header>
+    <div class="navbar navbar-dark bg-dark shadow-sm">
+        <div class="container">
+            <a href="/" class="navbar-brand">Photo Map</a>
+        </div>
+    </div>
+</header>
+
+<main>
+    <section class="py-5 container">
+        <h1 class="text-center">My Albums</h1>
+        <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3" id="album-list"></div>
+    </section>
+</main>
+
+<template id="album-card-template">
+    <div class="col">
+        <div class="card shadow-sm">
+            <div class="card-body">
+                <h5 class="card-title album-name"></h5>
+                <p class="card-text album-description"></p>
+                <a href="#" class="btn btn-primary view-album">View Album</a>
+            </div>
+        </div>
+    </div>
+</template>
+
+<script>
+    const albumList = document.getElementById('album-list');
+    const albumCardTemplate = document.getElementById('album-card-template');
+
+    async function fetchAlbums() {
+        try {
+            const response = await fetch('/app.php?command=my_albums');
+            const albums = await response.json();
+
+            albums.forEach((album) => {
+                const albumCard = albumCardTemplate.content.cloneNode(true);
+
+                albumCard.querySelector('.album-name').textContent = album.name;
+                albumCard.querySelector('.album-description').textContent = album.descr;
+                albumCard.querySelector('.view-album').setAttribute(
+                    'href',
+                    `/album.html?album_id=${album.id}`
+                );
+
+                albumList.appendChild(albumCard);
+            });
+        } catch (error) {
+            console.error('Error fetching albums:', error);
+        }
+    }
+
+    fetchAlbums();
+</script>
+</body>
+
+<footer class="text-bg-dark py-4">
+    <div class="container">
+        <div class="row">
+            <!-- About the Project -->
+            <div class="col-md-6 mb-3 mb-md-0">
+                <h5>About the Project</h5>
+                <p class="text-white">
+                    This project is a collaboration between Boyan Ivanov and Simeon Georgiev, aiming to create an intuitive photo management app with map-based photo positioning, privacy control, and easy import/export options.
+                </p>
+            </div>
+            <!-- Quick Links -->
+            <div class="col-md-3 mb-3 mb-md-0">
+                <h5>Quick Links</h5>
+                <ul class="list-unstyled">
+                    <li><a href="/upload.html" class="text-white text-decoration-none">Upload Photo</a></li>
+                    <li><a href="#" class="text-white text-decoration-none">Login</a></li>
+                    <li><a href="https://www.pic2map.com/" class="text-white text-decoration-none">Inspiration</a></li>
+                </ul>
+            </div>
+            <!-- Contact Us -->
+            <div class="col-md-3 text-md-end">
+                <h5>Contact Us</h5>
+                <p class="text-white mb-1">For inquiries:
+                    <a href="mailto:info@photomap.com" class="text-white text-decoration-none">info@photomap.com</a>
+                </p>
+                <p class="text-white mb-0">&copy; 2025 Photo Map. All rights reserved.</p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+</html>
