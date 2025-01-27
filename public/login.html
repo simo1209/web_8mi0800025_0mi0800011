@@ -51,14 +51,17 @@
   </style>
 </head>
 <body>
-  <div class="login-container">
-    <h2>Login</h2>
-    <form id="loginForm" method="POST" action="/app.php?command=login">
-      <input type="email" placeholder="Email" name="email" required>
-      <input type="password" placeholder="Password" name="password" required>
-      <button type="submit">Login</button>
-    </form>
-    <p>Don't have an account? <a href="signup.html">Sign Up</a></p>
-  </div>
-</body>
+    <div class="login-container">
+      <h2>Login</h2>
+      <form id="loginForm" method="POST" action="/app.php?command=login">
+        <input type="email" placeholder="Email" name="email" required>
+        <input type="password" placeholder="Password" id="password" name="password" required>
+        <button type="submit">Login</button>
+      </form>
+      <p>Don't have an account? <a href="signup.html">Sign Up</a></p>
+    </div>
+  
+    <script src="/js/login.js"></script>
+  </body>
+  
 </html>
