@@ -139,7 +139,7 @@ async function createAlbum() {
   const payload = {
     name: name,
     description: description,
-    owner_id: 1 // Replace with the actual owner ID
+    // owner_id: 1 // Replace with the actual owner ID
   };
 
   try {
@@ -251,7 +251,7 @@ async function submitFiles(id) {
     });
 
     if (response.ok) {
-      await new Promise((resolve) => setTimeout(resolve, 2000));
+      await new Promise((resolve) => setTimeout(resolve, 1000));
       loadingBar.style.display = 'none';
     } else {
       alert(`Failed to upload ${fileObj.file.name}`);

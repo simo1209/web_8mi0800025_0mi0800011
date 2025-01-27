@@ -32,7 +32,7 @@ try {
 }
 
 // Create an instance of the Router
-$router = new Router();
+$router = new Router($db);
 
 // Register some routes
 $router->register('GET', '/', function () {

@@ -12,77 +12,108 @@ class UserController
         $this->db = $db;
     }
 
-    /**
-     * Register the controller's routes with the router.
-     *
-     * @param Router $router
-     * @return void
-     */
     public function register(Router $router)
     {
-        $router->register('GET', '/users', [$this, 'index']);
-        $router->register('GET', '/users/{id}', [$this, 'show']);
-        $router->register('POST', '/users', [$this, 'create']);
-        $router->register('PUT', '/users/{id}', [$this, 'update']);
-        $router->register('DELETE', '/users/{id}', [$this, 'delete']);
+        $router->register('POST', 'login', [$this, 'login']);
+        $router->register('POST', 'signup', [$this, 'signup']);
     }
 
-    /**
-     * List all users.
-     *
-     * @return void
-     */
-    public function index()
+    public function signup($data)
     {
-        echo "List of all users:";
-        echo "<ul>";
-        $stmt = $this->db->run('SELECT * FROM users;');
-        while ($user = $stmt->fetch()) {
-            echo "<li>" . $user['name'] . " " . $user['email'] . "</li>";
+        if (!isset($data['username']) || !isset($data['email']) || !isset($data['password'])) {
+            return ['err' => 'Missing required fields'];
         }
-    }
+    
+        // Check if the username or email is already taken
+        $stmt = $this->db->run("SELECT * FROM users WHERE username = :username OR email = :email LIMIT 1", [
+            'username' => $data['username'],
+            'email' => $data['email']
+        ]);
+        $user = $stmt->fetch();
+    
+        if ($user) {
+            return ['err' => 'Username or email already taken'];
+        }
+    
+        // Hash the password
+        $hashedPassword = password_hash($data['password'], PASSWORD_BCRYPT);
+    
+        // Insert the user into the database and return the user ID
+        $stmt = $this->db->run(
+            "INSERT INTO users (username, email, password) VALUES (:username, :email, :password) RETURNING *",
+            [
+                'username' => $data['username'],
+                'email' => $data['email'],
+                'password' => $hashedPassword
+            ]
+        );
+        $user = $stmt->fetch();
+    
+        // Create a session token
+        $sessionToken = bin2hex(random_bytes(32));
+    
+        // Insert the session into the sessions table
+        $this->db->run(
+            "INSERT INTO sessions (user_id, session_token) VALUES (:user_id, :session_token) RETURNING session_token",
+            [
+                'user_id' => $user['id'],
+                'session_token' => $sessionToken
+            ]
+        );
 
-    /**
-     * Show a specific user.
-     *
-     * @param string $id
-     * @return void
-     */
-    public function show($id)
-    {
-        echo "Details of user with ID: $id";
+        session_start();
+        $_SESSION['user_id'] = $user['id'];
+        $_SESSION['session_token'] = $sessionToken;
+        
+        return ['msg' => 'User created successfully', 'session_token' => $sessionToken];
     }
+    
 
-    /**
-     * Create a new user.
-     *
-     * @return void
-     */
-    public function create()
+    public function login($data)
     {
-        echo "User created.";
-    }
+        if (!isset($data['email']) || !isset($data['password'])) {
+            return ['err' => 'Missing required fields'];
+        }
+    
+        // Query the database for the user
+        $stmt = $this->db->run("SELECT * FROM users WHERE email = :email LIMIT 1", [
+            'email' => $data['email']
+        ]);
+        $user = $stmt->fetch();
+    
+        if (!$user) {
+            return ['err' => 'User not found'];
+        }
+    
+        // Verify the password
+        if (!password_verify(password_hash($data['password'], PASSWORD_BCRYPT), $user['password'])) {
+            return ['err' => 'Incorrect password'];
+        }
+    
+        // Create a new session token
+        $sessionToken = bin2hex(random_bytes(32));
+    
+        // Insert the session into the sessions table, overwriting any existing session for the user
+        $this->db->run(
+            "INSERT INTO sessions (user_id, session_token, expires_at)
+            VALUES (:user_id, :session_token, NOW() + INTERVAL '1 day')
+            ON CONFLICT (user_id) DO UPDATE
+            SET session_token = EXCLUDED.session_token, expires_at = EXCLUDED.expires_at
+            RETURNING session_token",
+            [
+                'user_id' => $user['id'],
+                'session_token' => $sessionToken
+            ]
+        );
+    
+        session_start();
+        $_SESSION['user_id'] = $user['id'];
+        $_SESSION['session_token'] = $sessionToken;
+        // header("Authorization: Bearer $sessionToken");
 
-    /**
-     * Update a specific user.
-     *
-     * @param string $id
-     * @return void
-     */
-    public function update($id)
-    {
-        echo "User with ID $id updated.";
+        return ['msg' => 'Login successful', 'session_token' => $sessionToken];
     }
+    
 
-    /**
-     * Delete a specific user.
-     *
-     * @param string $id
-     * @return void
-     */
-    public function delete($id)
-    {
-        echo "User with ID $id deleted.";
-    }
 }
 

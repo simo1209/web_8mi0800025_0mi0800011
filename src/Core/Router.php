@@ -3,7 +3,13 @@ namespace Core;
 
 class Router
 {
+    private $db;
     private $routes = [];
+
+    public function __construct($db)
+    {
+        $this->db = $db;
+    }
 
     /**
      * Register a route with a callable function for a specific command.
@@ -36,8 +42,25 @@ class Router
         }
 
         $handler = $this->routes[$method][$command];
-        $response = call_user_func($handler, $_REQUEST, $_FILES ?? []);
-        $this->sendResponse($response);
+        try {
+            // Start transaction
+            $this->db->run('BEGIN');
+    
+            // Call the handler
+            $response = call_user_func($handler, $_REQUEST, $_FILES ?? []);
+    
+            // Commit transaction if no exception occurs
+            $this->db->run('COMMIT');
+    
+            // Send response
+            $this->sendResponse($response);
+        } catch (Exception $e) {
+            // Rollback transaction on exception
+            $this->db->run('ROLLBACK');
+    
+            // Handle the error (you can log it or send an error response)
+            $this->handleError($e);
+        }
     }
 
     /**

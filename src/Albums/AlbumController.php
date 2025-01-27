@@ -90,36 +90,28 @@ public function create($params)
 
     $name = $input['name'] ?? null;
     $description = $input['description'] ?? null;
-    $ownerId = $input['owner_id'] ?? null;
+    // $ownerId = $input['owner_id'] ?? null;\
+    session_start();
+    $ownerId = $_SESSION['user_id'];
 
     if (!$name || !$description || !$ownerId) {
-        http_response_code(400);
-        echo json_encode(['error' => 'Name, description, and owner ID are required.']);
-        return;
+        return ['error' => 'Name, description, and owner ID are required.'];
     }
 
-    try {
-        $albumId = $this->db->insert('albums', [
-            'name' => $name,
-            'descr' => $description,
-            'owner_id' => $ownerId
-        ]);
+    $albumId = $this->db->insert('albums', [
+        'name' => $name,
+        'descr' => $description,
+        'owner_id' => $ownerId
+    ]);
 
-        http_response_code(201);
-        echo json_encode([
-            'message' => 'Album created successfully.',
-            'album_id' => $albumId
-        ]);
-    } catch (\Exception $e) {
-        http_response_code(500);
-        echo json_encode([
-            'error' => 'Failed to create album.',
-            'details' => $e->getMessage()
-        ]);
-    }
+    return [
+        'message' => 'Album created successfully.',
+        'album_id' => $albumId
+    ];
+
 
     // Ensure no extra output
-    exit();
+    // exit();
 }
     /**
      * Update a specific album.
