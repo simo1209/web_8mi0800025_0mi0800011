@@ -30,7 +30,6 @@
             margin: 0;
         }
 
-
         main {
             flex: 1;
         }
@@ -41,16 +40,16 @@
         }
 
         footer h5 {
-            font-size: 1.25rem; /* Adjust heading size for smaller screens */
+            font-size: 1.25rem;
         }
 
         footer p, footer a {
-            font-size: 0.9rem; /* Smaller text for mobile devices */
+            font-size: 0.9rem;
         }
 
         @media (max-width: 576px) {
             footer {
-                text-align: center; /* Center-align all content for smaller devices */
+                text-align: center;
             }
 
             footer .text-md-end {
@@ -71,7 +70,10 @@
 
 <main>
     <section class="py-5 container">
-        <h1 class="text-center" id="album-title">Album</h1>
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h1 id="album-title">Album</h1>
+            <a id="download-album-btn" href="#" class="btn btn-primary">Download Album</a>
+        </div>
         <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3" id="image-list"></div>
     </section>
 </main>
@@ -91,9 +93,6 @@
                     </div>
                     <small class="text-muted image-time-since"></small>
                 </div>
-                <p class="text-body-secondary">
-                    <a href="#" class="album-link"></a>
-                </p>
             </div>
         </div>
     </div>
@@ -105,6 +104,7 @@
     const albumTitle = document.getElementById('album-title');
     const imageList = document.getElementById('image-list');
     const imageCardTemplate = document.getElementById('image-card-template');
+    const downloadAlbumBtn = document.getElementById('download-album-btn');
 
     // Helper function to calculate time since a date
     function timeSince(date) {
@@ -150,11 +150,6 @@
                 );
                 imageCard.querySelector('.image-description').textContent = image.descr;
 
-                // Set album link
-                const albumLink = imageCard.querySelector('.album-link');
-                albumLink.textContent = `Album: ${image.album_name || 'Unnamed Album'}`;
-                albumLink.setAttribute('href', `/album.html?album_id=${image.album_id}`);
-
                 // Set "time since"
                 const timeSinceText = timeSince(image.created_at);
                 imageCard.querySelector('.image-time-since').textContent = timeSinceText;
@@ -166,39 +161,42 @@
         }
     }
 
+    // Set the download button link
+    downloadAlbumBtn.setAttribute('href', `/app.php?command=export_album&album_id=${albumId}`);
+
     fetchAlbumImages();
 </script>
 
-    <footer class="text-bg-dark py-4">
-        <div class="container">
-            <div class="row">
-                <!-- About the Project -->
-                <div class="col-md-6 mb-3 mb-md-0">
-                    <h5>About the Project</h5>
-                    <p class="text-white">
-                        This project is a collaboration between Boyan Ivanov and Simeon Georgiev, aiming to create an intuitive photo management app with map-based photo positioning, privacy control, and easy import/export options.
-                    </p>
-                </div>
-                <!-- Quick Links -->
-                <div class="col-md-3 mb-3 mb-md-0">
-                    <h5>Quick Links</h5>
-                    <ul class="list-unstyled">
-                        <li><a href="/upload.html" class="text-white text-decoration-none">Upload Photo</a></li>
-                        <li><a href="#" class="text-white text-decoration-none">Login</a></li>
-                        <li><a href="https://www.pic2map.com/" class="text-white text-decoration-none">Inspiration</a></li>
-                    </ul>
-                </div>
-                <!-- Contact Us -->
-                <div class="col-md-3 text-md-end">
-                    <h5>Contact Us</h5>
-                    <p class="text-white mb-1">For inquiries:
-                        <a href="mailto:info@photomap.com" class="text-white text-decoration-none">info@photomap.com</a>
-                    </p>
-                    <p class="text-white mb-0">&copy; 2025 Photo Map. All rights reserved.</p>
-                </div>
+<footer class="text-bg-dark py-4">
+    <div class="container">
+        <div class="row">
+            <!-- About the Project -->
+            <div class="col-md-6 mb-3 mb-md-0">
+                <h5>About the Project</h5>
+                <p class="text-white">
+                    This project is a collaboration between Boyan Ivanov and Simeon Georgiev, aiming to create an intuitive photo management app with map-based photo positioning, privacy control, and easy import/export options.
+                </p>
+            </div>
+            <!-- Quick Links -->
+            <div class="col-md-3 mb-3 mb-md-0">
+                <h5>Quick Links</h5>
+                <ul class="list-unstyled">
+                    <li><a href="/upload.html" class="text-white text-decoration-none">Upload Photo</a></li>
+                    <li><a href="#" class="text-white text-decoration-none">Login</a></li>
+                    <li><a href="https://www.pic2map.com/" class="text-white text-decoration-none">Inspiration</a></li>
+                </ul>
+            </div>
+            <!-- Contact Us -->
+            <div class="col-md-3 text-md-end">
+                <h5>Contact Us</h5>
+                <p class="text-white mb-1">For inquiries:
+                    <a href="mailto:info@photomap.com" class="text-white text-decoration-none">info@photomap.com</a>
+                </p>
+                <p class="text-white mb-0">&copy; 2025 Photo Map. All rights reserved.</p>
             </div>
         </div>
-    </footer>
+    </div>
+</footer>
 </body>
 
 </html>

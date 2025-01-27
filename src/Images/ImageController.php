@@ -130,102 +130,103 @@ class ImageController
    }
 
 
-    public function exportAlbum($params)
-    {
-        header('Content-Type: application/json');
+public function exportAlbum($params)
+{
+    $albumId = $params['album_id'] ?? null;
 
-        $albumId = $params['album_id'] ?? null;
-
-        if (!$albumId) {
-            http_response_code(400);
-            echo json_encode(['error' => 'Album ID is required.']);
-            return;
-        }
-
-        try {
-            $album = $this->db->row("SELECT * FROM albums WHERE id = :album_id", ['album_id' => $albumId]);
-            if (!$album) {
-                http_response_code(404);
-                echo json_encode(['error' => 'Album not found.']);
-                return;
-            }
-
-            $images = $this->db->rows("SELECT * FROM images WHERE album_id = :album_id", ['album_id' => $albumId]);
-            if (empty($images)) {
-                http_response_code(404);
-                echo json_encode(['error' => 'No images found in this album.']);
-                return;
-            }
-
-            $metadata = [
-                'album' => [
-                    'id' => $album['id'],
-                    'name' => $album['name'],
-                    'description' => $album['descr'],
-                    'created_at' => $album['created_at']
-                ],
-                'images' => array_map(function ($image) {
-                    return [
-                        'id' => $image['id'],
-                        'filepath' => $image['filepath'],
-                        'dbname' => $image['dbname'],
-                        'description' => $image['descr'],
-                        'visibility' => $image['visibility'],
-                        'geo_data' => json_decode($image['geo_data']),
-                        'created_at' => $image['created_at']
-                    ];
-                }, $images)
-            ];
-
-            $tempDir = sys_get_temp_dir() . '/album_' . $albumId . '_' . time();
-            mkdir($tempDir, 0777, true);
-
-            $metadataFile = $tempDir . '/metadata.json';
-            file_put_contents($metadataFile, json_encode($metadata, JSON_PRETTY_PRINT));
-
-            foreach ($images as $image) {
-                $sourcePath = $image['filepath'];
-                $destinationPath = $tempDir . '/' . basename($image['filepath']);
-                if (file_exists($sourcePath)) {
-                    copy($sourcePath, $destinationPath);
-                }
-            }
-
-            $zipFile = sys_get_temp_dir() . '/album_' . $albumId . '.zip';
-            $zip = new \ZipArchive();
-            if ($zip->open($zipFile, \ZipArchive::CREATE) !== true) {
-                http_response_code(500);
-                echo json_encode(['error' => 'Failed to create zip archive.']);
-                return;
-            }
-
-            $files = scandir($tempDir);
-            foreach ($files as $file) {
-                if ($file !== '.' && $file !== '..') {
-                    $zip->addFile($tempDir . '/' . $file, $file);
-                }
-            }
-
-            $zip->close();
-
-            header('Content-Type: application/zip');
-            header('Content-Disposition: attachment; filename="album_' . $albumId . '.zip"');
-            header('Content-Length: ' . filesize($zipFile));
-            readfile($zipFile);
-
-            array_map('unlink', glob("$tempDir/*"));
-            rmdir($tempDir);
-            unlink($zipFile);
-
-            exit();
-        } catch (\Exception $e) {
-            http_response_code(500);
-            echo json_encode([
-                'error' => 'Failed to export album.',
-                'details' => $e->getMessage()
-            ]);
-        }
+    if (!$albumId) {
+        http_response_code(400);
+        die('Album ID is required.');
     }
+
+    try {
+        // Fetch album details
+        $album = $this->db->row("SELECT * FROM albums WHERE id = :album_id", ['album_id' => $albumId]);
+        if (!$album) {
+            http_response_code(404);
+            die('Album not found.');
+        }
+
+        // Fetch images in the album
+        $images = $this->db->rows("SELECT * FROM images WHERE album_id = :album_id", ['album_id' => $albumId]);
+        if (empty($images)) {
+            http_response_code(404);
+            die('No images found in this album.');
+        }
+
+        // Prepare metadata
+        $metadata = [
+            'album' => [
+                'id' => $album['id'],
+                'name' => $album['name'],
+                'description' => $album['descr'],
+                'created_at' => $album['created_at']
+            ],
+            'images' => array_map(function ($image) {
+                return [
+                    'id' => $image['id'],
+                    'filepath' => $image['filepath'],
+                    'dbname' => $image['dbname'],
+                    'description' => $image['descr'],
+                    'visibility' => $image['visibility'],
+                    'geo_data' => $image['geo_data'] ? json_decode($image['geo_data'], true) : null,
+                    'created_at' => $image['created_at']
+                ];
+            }, $images)
+        ];
+
+        // Create a temporary directory for the zip export
+        $tempDir = sys_get_temp_dir() . '/album_' . $albumId . '_' . time();
+        mkdir($tempDir, 0777, true);
+
+        // Save metadata as a JSON file
+        $metadataFile = $tempDir . '/metadata.json';
+        file_put_contents($metadataFile, json_encode($metadata, JSON_PRETTY_PRINT));
+
+        // Copy all images to the temp directory
+        foreach ($images as $image) {
+            $sourcePath = $image['filepath'];
+            $destinationPath = $tempDir . '/' . basename($image['filepath']);
+            if (file_exists($sourcePath)) {
+                copy($sourcePath, $destinationPath);
+            }
+        }
+
+        // Create a zip archive
+        $zipFile = sys_get_temp_dir() . '/album_' . $albumId . '.zip';
+        $zip = new \ZipArchive();
+        if ($zip->open($zipFile, \ZipArchive::CREATE) !== true) {
+            http_response_code(500);
+            die('Failed to create zip archive.');
+        }
+
+        // Add all files in the temp directory to the zip archive
+        $files = scandir($tempDir);
+        foreach ($files as $file) {
+            if ($file !== '.' && $file !== '..') {
+                $zip->addFile($tempDir . '/' . $file, $file);
+            }
+        }
+        $zip->close();
+
+        // Clean up the temporary directory
+        array_map('unlink', glob("$tempDir/*"));
+        rmdir($tempDir);
+
+        // Serve the zip file for download
+        header('Content-Type: application/zip');
+        header('Content-Disposition: attachment; filename="album_' . $albumId . '.zip"');
+        header('Content-Length: ' . filesize($zipFile));
+        readfile($zipFile);
+
+        // Delete the zip file after serving
+        unlink($zipFile);
+        exit();
+    } catch (\Exception $e) {
+        http_response_code(500);
+        die('Failed to export album: ' . $e->getMessage());
+    }
+}
 
 
 
