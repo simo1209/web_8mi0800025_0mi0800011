@@ -107,15 +107,19 @@
         <!-- Buttons Section -->
         <div class="col-md-4 d-flex flex-column align-items-center">
             <h3 class="mb-3">Preset Crop Sizes</h3>
-            <button class="btn btn-outline-primary mb-3" onclick="setCropSize(100, 100)">100x100</button>
+            <input type="number" id="crop-width" class="form-control mb-3" placeholder="Width" onchange="setCropWidth(this.value)" value="200">
+            <input type="number" id="crop-height" class="form-control mb-3" placeholder="Height" onchange="setCropHeight(this.value)" value="150">
+
+            <!-- <button class="btn btn-outline-primary mb-3" onclick="setCropSize(100, 100)">100x100</button>
             <button class="btn btn-outline-primary mb-3" onclick="setCropSize(200, 150)">200x150</button>
             <button class="btn btn-outline-primary mb-3" onclick="setCropSize(300, 300)">300x300</button>
-            <button class="btn btn-outline-primary mb-3" onclick="setCropSize(400, 250)">400x250</button>
+            <button class="btn btn-outline-primary mb-3" onclick="setCropSize(400, 250)">400x250</button> -->
+            <button class="btn btn-outline-primary mb-3" onclick="setCropSize(400, 400)">Facebook</button>
+            <button class="btn btn-outline-primary mb-3" onclick="setCropSize(320, 400)">Instagram</button>
             <button class="btn btn-success mt-3" onclick="downloadCroppedImage()">Download Cropped Image</button>
         </div>
     </div>
 </div>
-
 
 <footer class="text-bg-dark py-4">
     <div class="container">
@@ -148,8 +152,6 @@
     </div>
 </footer>
 
-<script>
-
-</script>
+<script src="/js/edit.js"></script>
 </body>
 </html>

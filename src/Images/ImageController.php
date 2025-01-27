@@ -90,6 +90,7 @@ class ImageController
            $dbFileName = sha1(time() . '_' . $basename);
            $description = $params['description'] ?? null;
            $visibility = $params['visibility'] ?? 'public';
+           $geoData = $params['geo_data'] ?? null;
            $albumId = $params['album_id'] ?? null; // Get album_id from the request
 
            if (!$albumId) {
@@ -110,6 +111,7 @@ class ImageController
                            'dbname' => $dbFileName,
                            'descr' => $description,
                            'visibility' => $visibility,
+                           'geo_data' => $geoData,
                            'album_id' => $albumId // Ensure album_id is inserted
                        ]);
 

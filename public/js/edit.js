@@ -1,8 +1,9 @@
 const canvas = document.getElementById("canvas");
 const ctx = canvas.getContext("2d");
 
+const imageId = new URLSearchParams(window.location.search).get('image_id')
 const image = new Image();
-image.src = '/images/image.jpg'; // Replace with your image source
+image.src = `/app.php?command=image&image_id=${imageId}`;
 
 const cropRect = { x: 50, y: 50, width: 200, height: 150 };
 
@@ -47,6 +48,29 @@ function setCropSize(width, height) {
 
     draw();
 }
+
+function setCropWidth(width) {
+    cropRect.width = width;
+    // cropRect.height = height;
+
+    // Center the crop rectangle
+    cropRect.x = (canvas.width - width) / 2;
+    cropRect.y = (canvas.height - cropRect.height) / 2;
+
+    draw();
+}
+
+function setCropHeight(height) {
+    // cropRect.width = width;
+    cropRect.height = height;
+
+    // Center the crop rectangle
+    cropRect.x = (canvas.width - cropRect.width) / 2;
+    cropRect.y = (canvas.height - height) / 2;
+
+    draw();
+}
+
 
 let isDragging = false;
 let dragOffsetX = 0, dragOffsetY = 0;

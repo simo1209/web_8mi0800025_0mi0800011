@@ -3,7 +3,10 @@ const fileInput = document.getElementById('fileInput');
 const previewTableBody = document.getElementById('previewTableBody');
 const submitAllButton = document.getElementById('submitAllButton');
 const albumSelection = document.getElementById('albumSelection'); // Album dropdown
-let files = [];
+let files = {};
+
+let modal = document.getElementById('modal');
+let modalShown = false;
 
 dragDropArea.addEventListener('click', () => {
   fileInput.click();
@@ -25,12 +28,29 @@ function handleDrop(event) {
   handleFiles(event.dataTransfer.files);
 }
 
+function handleModalClick(id) {
+
+  console.log(id);
+  if (modalShown) {
+    modal.closest()
+  } else {
+    modal.showModal();
+  }
+  modalShown = !modalShown;
+}
+
+function setEditGeoImageId(id) {
+  document.querySelector('#editGeo').setAttribute('data-image-id', id);
+}
+
 function handleFiles(selectedFiles) {
   for (const file of selectedFiles) {
     if (file.type.startsWith('image/')) {
-      const id = `file-${files.length}`;
-      const fileObj = { id, file, index: files.length, description: null, visibility: 'public', status: 'Pending', geo_data: null };
-      files.push(fileObj);
+      const index = Object.keys(files).length;
+      const id = `file-${index}`;
+      const fileObj = { id, file, index, description: null, visibility: 'public', status: 'Pending', geo_data: {lat: 42.674435, lng: 23.330431} };
+      // files.push(fileObj);
+      files[id] = fileObj;
 
       const reader = new FileReader();
       reader.onload = (e) => {
@@ -60,7 +80,8 @@ function handleFiles(selectedFiles) {
             </select>
           </td>
           <td>
-            <input type="text" class="form-control geo-input" id="geo-${id}" placeholder="Enter coordinates (e.g., 42.6977, 23.3219)">
+            <input style="display: none;" type="text" class="form-control geo-input" id="geo-${id}" placeholder="Enter coordinates (e.g., 42.6977, 23.3219)">
+            <button class="btn btn-outline-secondary ms-2" data-bs-toggle="modal" data-bs-target="#editGeo" onclick="setEditGeoImageId('${id}')">Edit</button>
           </td>
           <td>
             <div class="loading-bar" id="loading-${id}">
@@ -94,14 +115,14 @@ function saveDescription(id) {
   editSection.style.display = 'none';
   displaySection.querySelector(`#description-${id}`).textContent = description;
 
-  const fileObj = files.find((f) => f.id === id);
+  const fileObj = files[id];
   if (fileObj) {
     fileObj.description = description;
   }
 }
 
 function clearDescription(id) {
-  const fileObj = files.find((f) => f.id === id);
+  const fileObj = files[id];
   if (fileObj) {
     fileObj.description = null;
   }
@@ -113,14 +134,14 @@ function clearDescription(id) {
 }
 
 function updateVisibility(id, value) {
-  const fileObj = files.find((f) => f.id === id);
+  const fileObj = files[id];
   if (fileObj) {
     fileObj.visibility = value;
   }
 }
 
 function updateGeolocation(id, value) {
-  const fileObj = files.find((f) => f.id === id);
+  const fileObj = files[id];
   if (fileObj) {
     fileObj.geo_data = value;
   }
@@ -218,13 +239,13 @@ async function fetchAlbums() {
 }
 
 async function submitFiles(id) {
-  const fileObj = files.find((f) => f.id === id);
+  const fileObj = files[id];
   if (!fileObj) return;
 
-  const geoInput = document.getElementById(`geo-${id}`);
-  if (geoInput) {
-    fileObj.geo_data = geoInput.value;
-  }
+  // const geoInput = document.getElementById(`geo-${id}`);
+  // if (geoInput) {
+  //   fileObj.geo_data = geoInput.value;
+  // }
 
   const albumId = albumSelection.value; // Get the selected album ID
   if (!albumId) {
@@ -236,7 +257,7 @@ async function submitFiles(id) {
   formData.append('file', fileObj.file);
   if (fileObj.description != null) formData.append('description', fileObj.description);
   formData.append('visibility', fileObj.visibility);
-  if (fileObj.geo_data != null) formData.append('geo_data', fileObj.geo_data);
+  if (fileObj.geo_data != null) formData.append('geo_data', JSON.stringify(fileObj.geo_data));
   formData.append('album_id', albumId); // Include album_id in the payload
 
   const loadingBar = document.getElementById(`loading-${id}`);
@@ -268,7 +289,7 @@ async function submitFiles(id) {
 }
 
 async function submitAll() {
-  for (const file of files) {
+  for (const file of Object.values(files)) {
     if (file.status !== 'Finished') {
       await submitFiles(file.id);
     }
@@ -276,9 +297,9 @@ async function submitAll() {
 }
 
 function checkAllFinished() {
-  if (files.every((file) => file.status === 'Finished')) {
+  if (Object.values(files).every((file) => file.status === 'Finished')) {
     submitAllButton.textContent = 'Next';
-    submitAllButton.onclick = () => alert('Proceed to the next step!');
+    submitAllButton.onclick = () => window.location.href = '/';
   }
 }
 
