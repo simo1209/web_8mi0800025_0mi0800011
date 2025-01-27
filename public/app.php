@@ -2,13 +2,14 @@
 require './src/Core/Router.php';
 require './src/Users/UserController.php';
 require './src/Images/ImageController.php';
+require './src/Albums/AlbumController.php'; // Include the AlbumController
 require './src/Core/Database.php';
 
-// index.php
 use Core\Database;
 use Core\Router;
 use Users\UserController;
 use Images\ImageController;
+use Albums\AlbumController; // Import the AlbumController
 
 // Fetch environment variables
 $databaseConfig = [
@@ -30,8 +31,6 @@ try {
     return;
 }
 
-
-
 // Create an instance of the Router
 $router = new Router();
 
@@ -39,7 +38,6 @@ $router = new Router();
 $router->register('GET', '/', function () {
     include('./index.html');
     return;
-    // echo "Welcome to the Home Page!";
 });
 
 $router->register('GET', 'hello', function ($data) {
@@ -50,34 +48,24 @@ $router->register('GET', 'hello', function ($data) {
     return $res;
 });
 
-
-
-/*
-$router->register('GET', '/about', function () {
-    echo "Welcome to the About Page!";
-});
- */
-
 // Create a user controller instance
 $userController = new UserController($db);
 
-// Register the controller's routes
+// Register the user controller's routes
 $userController->register($router);
 
+// Create an image controller instance
 $imageController = new ImageController($db);
+
+// Register the image controller's routes
 $imageController->register($router);
 
-// You can add as many as you need...
-// $router->register('/users', [UserController::class, 'index']);
+// Create an album controller instance
+$albumController = new AlbumController($db);
 
+// Register the album controller's routes
+$albumController->register($router);
 
-// Register a file upload route
-// $router->register('POST', 'upload_image', );
-
-// Assume we have the request path in $_SERVER['REQUEST_URI']
-// Strip query string
-// $path = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
+// Resolve the current request
 $method = strtoupper($_SERVER['REQUEST_METHOD']);
-
 $router->resolve($_GET['command'], $method);
-

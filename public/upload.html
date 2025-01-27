@@ -120,6 +120,46 @@
   </header>
 
   <div class="container my-5">
+
+    <!-- Modal for Creating a New Album -->
+    <div class="modal fade" id="newAlbumModal" tabindex="-1" aria-labelledby="newAlbumModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="newAlbumModalLabel">Create New Album</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <form id="newAlbumForm">
+              <div class="mb-3">
+                <label for="albumName" class="form-label">Album Name</label>
+                <input type="text" class="form-control" id="albumName" required>
+              </div>
+              <div class="mb-3">
+                <label for="albumDescription" class="form-label">Album Description</label>
+                <textarea class="form-control" id="albumDescription" rows="3" required></textarea>
+              </div>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+            <button type="button" class="btn btn-primary" onclick="createAlbum()">Create Album</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="mb-3">
+      <label for="albumSelection" class="form-label">Select an Album</label>
+      <div class="d-flex">
+        <select class="form-select" id="albumSelection">
+          <option value="" selected>Choose an existing album</option>
+          <!-- Dynamically populate album options here -->
+        </select>
+        <button class="btn btn-outline-secondary ms-2" data-bs-toggle="modal" data-bs-target="#newAlbumModal">Create New Album</button>
+      </div>
+    </div>
+
     <h1 class="text-center mb-4">Upload Images</h1>
     <div 
       id="dragDropArea" 
@@ -142,10 +182,12 @@
           <th>Image</th>
           <th>Description</th>
           <th>Visibility</th>
+          <th>Geolocation</th>
           <th>Status</th>
         </tr>
       </thead>
-      <tbody id="previewTableBody"></tbody>
+      <tbody id="previewTableBody">
+      </tbody>
     </table>
 
     <button class="btn btn-primary w-100 mt-4" id="submitAllButton" onclick="submitAll()">Submit All</button>

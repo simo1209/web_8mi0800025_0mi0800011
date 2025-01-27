@@ -1,0 +1,172 @@
+<?php
+namespace Albums;
+
+use Core\Router;
+
+class AlbumController
+{
+    private $db;
+
+    public function __construct($db)
+    {
+        $this->db = $db;
+    }
+
+    /**
+     * Register the controller's routes with the router.
+     *
+     * @param Router $router
+     * @return void
+     */
+    public function register(Router $router)
+    {
+        $router->register('GET', '/albums', [$this, 'index']); // List all albums
+        $router->register('GET', '/albums/{id}', [$this, 'show']); // Show a specific album
+        $router->register('POST', '/albums', [$this, 'create']); // Create a new album
+        $router->register('PUT', '/albums/{id}', [$this, 'update']); // Update a specific album
+        $router->register('DELETE', '/albums/{id}', [$this, 'delete']); // Delete a specific album
+    }
+
+    /**
+     * Get a list of albums.
+     */
+    public function index() {
+        header('Content-Type: application/json');
+
+        try {
+            $albums = $this->db->rows("SELECT id, name, descr AS description FROM albums ORDER BY created_at DESC");
+
+            // Send JSON response
+            echo json_encode($albums);
+        } catch (\Exception $e) {
+            http_response_code(500);
+            echo json_encode([
+                'error' => 'Failed to fetch albums.',
+                'details' => $e->getMessage()
+            ]);
+        }
+
+        // Ensure no further output is sent
+        exit();
+    }
+
+    /**
+     * Show a specific album.
+     *
+     * @param array $params
+     * @return void
+     */
+    public function show($params)
+    {
+        $albumId = $params['id'] ?? null;
+        if (!$albumId) {
+            http_response_code(400);
+            echo json_encode(['error' => 'Album ID is required.']);
+            return;
+        }
+
+        $stmt = $this->db->run('SELECT * FROM albums WHERE id = :id', ['id' => $albumId]);
+        $album = $stmt->fetch();
+
+        if (!$album) {
+            http_response_code(404);
+            echo json_encode(['error' => 'Album not found.']);
+            return;
+        }
+
+        header('Content-Type: application/json');
+        echo json_encode($album);
+    }
+
+public function create($params)
+{
+    header('Content-Type: application/json');
+
+    // Decode raw JSON input
+    $input = json_decode(file_get_contents('php://input'), true);
+
+    // Debug: Log the input for verification
+    error_log(json_encode($input));
+
+    $name = $input['name'] ?? null;
+    $description = $input['description'] ?? null;
+    $ownerId = $input['owner_id'] ?? null;
+
+    if (!$name || !$description || !$ownerId) {
+        http_response_code(400);
+        echo json_encode(['error' => 'Name, description, and owner ID are required.']);
+        return;
+    }
+
+    try {
+        $albumId = $this->db->insert('albums', [
+            'name' => $name,
+            'descr' => $description,
+            'owner_id' => $ownerId
+        ]);
+
+        http_response_code(201);
+        echo json_encode([
+            'message' => 'Album created successfully.',
+            'album_id' => $albumId
+        ]);
+    } catch (\Exception $e) {
+        http_response_code(500);
+        echo json_encode([
+            'error' => 'Failed to create album.',
+            'details' => $e->getMessage()
+        ]);
+    }
+
+    // Ensure no extra output
+    exit();
+}
+    /**
+     * Update a specific album.
+     *
+     * @param array $params
+     * @return void
+     */
+    public function update($params)
+    {
+        $albumId = $params['id'] ?? null;
+        $name = $params['name'] ?? null;
+        $description = $params['description'] ?? null;
+
+        if (!$albumId || !$name) {
+            http_response_code(400);
+            echo json_encode(['error' => 'Album ID and name are required.']);
+            return;
+        }
+
+        $this->db->update('albums', [
+            'name' => $name,
+            'descr' => $description
+        ], ['id' => $albumId]);
+
+        http_response_code(200);
+        echo json_encode(['message' => 'Album updated successfully.']);
+    }
+
+    /**
+     * Delete a specific album.
+     *
+     * @param array $params
+     * @return void
+     */
+    public function delete($params)
+    {
+        $albumId = $params['id'] ?? null;
+
+        if (!$albumId) {
+            http_response_code(400);
+            echo json_encode(['error' => 'Album ID is required.']);
+            return;
+        }
+
+        $this->db->delete('albums', ['id' => $albumId]);
+
+        http_response_code(200);
+        echo json_encode(['message' => 'Album deleted successfully.']);
+    }
+}
