@@ -28,7 +28,7 @@ function handleFiles(selectedFiles) {
   for (const file of selectedFiles) {
     if (file.type.startsWith('image/')) {
       const id = `file-${files.length}`;
-      const fileObj = { id, file, description: null, visibility: 'public', status: 'Pending' };
+      const fileObj = { id, file, index: files.length, description: null, visibility: 'public', status: 'Pending' };
       files.push(fileObj);
 
       const reader = new FileReader();
@@ -40,7 +40,7 @@ function handleFiles(selectedFiles) {
           <td><img src="${e.target.result}" alt="Image"></td>
           <td>
             <span class="display-description" id="display-section-${id}">
-              <span id="description-${id}">File ${files.length+1}</span>
+              <span id="description-${id}">File ${fileObj.index+1}</span>
               <button class="btn btn-sm btn-secondary" id="edit-description-${id}" onclick="editDescription('${id}')">Edit Description</button>
             </span>
             <span class="edit-description" style="display: none" id="edit-section-${id}">
