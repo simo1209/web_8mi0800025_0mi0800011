@@ -1,12 +1,3 @@
-DROP TABLE IF EXISTS users;
-CREATE TABLE IF NOT EXISTS users {
-    id BIGSERIAL PRIMARY KEY,
-    username TEXT NOT NULL,
-    email TEXT NOT NULL,
-    password TEXT NOT NULL,
-    created_at TIMESTAMP DEFAULT NOW()
-};
-
 DROP TABLE IF EXISTS images;
 CREATE TABLE IF NOT EXISTS images (
     id BIGSERIAL PRIMARY KEY,
@@ -21,15 +12,23 @@ CREATE TABLE IF NOT EXISTS images (
     view_count BIGINT DEFAULT 0,
 
     created_at TIMESTAMP DEFAULT NOW()
-
 );
 
 DROP TABLE IF EXISTS albums;
-CREATE TABLE IF NOT EXISTS albums {
+CREATE TABLE IF NOT EXISTS albums (
     id BIGSERIAL PRIMARY KEY,
-    owner_id BIGINT NOT NULL REFEERENCES users(id),
+    owner_id BIGINT NOT NULL REFERENCES users(id),
 
     name TEXT NOT NULL,
     descr TEXT,
     created_at TIMESTAMP DEFAULT NOW()
-};
+);
+
+DROP TABLE IF EXISTS users;
+CREATE TABLE IF NOT EXISTS users (
+    id BIGSERIAL PRIMARY KEY,
+    username TEXT NOT NULL,
+    email TEXT NOT NULL,
+    password TEXT NOT NULL,
+    created_at TIMESTAMP DEFAULT NOW()
+);
