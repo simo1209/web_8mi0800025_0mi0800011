@@ -25,34 +25,37 @@ class ImageController
     }
 
     public function serve_static_image($data) {
-        $stmt = $this->db->run("SELECT filepath FROM images WHERE dbname = :dbname", ['dbname' => $data['dbname']]);
+        
+        if (!isset($data['image_id'])) {
+            return [err => 'Image ID not provided'];
+        }
+
+        // Query the database for the image file path
+        $stmt = $this->db->run("SELECT filepath FROM images WHERE dbname = :dbname", ['dbname' => $data['image_id']]);
         $image = $stmt->fetch();
-        
-        // Check if the file exists
-        if (!file_exists($image['filepath'])) {
-            http_response_code(404);
-            echo "Image not found.";
-            exit;
+    
+        if ($image) {
+            $filePath = $image['filepath'];
+    
+            // Check if the file exists
+            if (file_exists($filePath)) {
+                // Get the file's MIME type
+                $mimeType = mime_content_type($filePath);
+    
+                // Serve the image with appropriate headers
+                header('Content-Type: ' . $mimeType);
+                header('Content-Length: ' . filesize($filePath));
+    
+                // Read and output the image file
+                readfile($filePath);
+            } else {
+                // If the file does not exist, send a 404 response
+                return ['err' => 'Image not found'];
+            }
+        } else {
+            // If no record was found in the database, send a 404 response
+            return ['err' => 'Image not found'];
         }
-
-        // Get the file's mime type (e.g., image/jpeg, image/png)
-        $mimeType = mime_content_type($image['filepath']);
-
-        header("Content-Type: $mimeType");
-        header("Content-Length: " . filesize($image['filepath']));
-        header("Cache-Control: public, max-age=3600");
-        header("Content-Disposition: inline; filename=\"" . basename($image['filepath']) . "\"");
-
-        
-        if (ob_get_level()) {
-            ob_end_clean();
-        }
-        
-
-        // Read and output the image file
-        readfile($image['filepath']);
-        exit;
-        
     }
 
     public function upload($params, $files) {
