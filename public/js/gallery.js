@@ -2,7 +2,7 @@ const frontpageGallery = document.querySelector('#frontpage-gallery');
 const imageCardTemplate = document.querySelector('#image-card-template');
 
 try {
-  let images_request = await fetch('/app.php?json_rpc={"command": "get_images", "params": {}}');
+  let images_request = await fetch('/app.php?command=latest_images');
   let images = await images_request.json();
 
   for (const image of images) {
@@ -10,8 +10,8 @@ try {
     const imageCardClone = imageCardTemplate.content.cloneNode(true);
 
 
-    imageCardClone.querySelector('.image-card').setAttribute('src', `images/${image.filename}`);
-    imageCardClone.querySelector('.image-description').textContent = image.description;
+    imageCardClone.querySelector('.image-card').setAttribute('src', `/app.php?command=image&image_id=${image.image_id}`);
+    imageCardClone.querySelector('.image-description').textContent = image.descr;
 
     frontpageGallery.append(imageCardClone);
   }
