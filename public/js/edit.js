@@ -35,8 +35,21 @@ document.querySelector('#save-btn').addEventListener('click', async () => {
 
     if (response.ok) {
         document.querySelector('#save-image').textContent = 'Saved!';
+        window.location.href = '/my_albums.html';
     } else {
         alert('Failed to save image');
+    }
+});
+
+document.querySelector('#delete-btn').addEventListener('click', async () => {
+    const response = await fetch(`/app.php?command=delete_image_by_id&image_id=${imageId}`, {
+        method: 'DELETE',
+    });
+
+    if (response.ok) {
+        window.location.href = '/my_albums.html';
+    } else {
+        alert('Failed to delete image');
     }
 });
 

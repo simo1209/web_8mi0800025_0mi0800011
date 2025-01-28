@@ -46,6 +46,16 @@ class Router
             // Start transaction
             $this->db->run('BEGIN');
     
+            // Extend $_REQUEST with JSON-decoded $_POST
+            $jsonInput = file_get_contents('php://input');
+            $data = json_decode($jsonInput, true); // true converts JSON to associative array
+
+            // Check if JSON decoding was successful
+            if (json_last_error() === JSON_ERROR_NONE && is_array($data)) {
+                // Merge the decoded data into the $_REQUEST array
+                $_REQUEST = array_merge($_REQUEST, $data);
+            }
+
             // Call the handler
             $response = call_user_func($handler, $_REQUEST, $_FILES ?? []);
     
