@@ -22,6 +22,11 @@ function timeSince(date) {
   return 'just now';
 }
 
+function viewImage(image, imageEl) {
+  document.querySelector('#viewImage img').setAttribute('src', `/app.php?command=image&image_id=${image.image_id}`);
+  new bootstrap.Modal(document.getElementById('viewImage')).show();
+}
+
 try {
   const imagesRequest = await fetch('/app.php?command=latest_images');
   const images = await imagesRequest.json();
@@ -31,7 +36,11 @@ try {
     const imageCardClone = imageCardTemplate.content.cloneNode(true);
 
     // Set image source and description
-    imageCardClone.querySelector('.image-card').setAttribute('src', `/app.php?command=image&image_id=${image.image_id}`);
+    const imageEl = imageCardClone.querySelector('.image-card');
+    imageEl.setAttribute('src', `/app.php?command=image&image_id=${image.image_id}`);
+    // imageEl.setAttribute('data-image-id', image.image_id);
+    imageEl.addEventListener('click', () => viewImage(image, imageEl));
+
     imageCardClone.querySelector('.image-description').textContent = image.descr;
 
     // Set album link
