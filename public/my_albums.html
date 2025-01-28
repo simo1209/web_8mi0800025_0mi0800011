@@ -58,8 +58,11 @@
 
 <main>
     <section class="py-5 container">
-        <h1 class="text-center">My Albums</h1>
-        <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3" id="album-list"></div>
+        <h1 class="text-center">Моите албуми</h1>
+
+        <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3" id="album-list">
+            <h3 class="text-center" id="no-albums-warning">Липсват ви албуми</h3>
+        </div>
     </section>
 </main>
 
@@ -83,6 +86,11 @@
         try {
             const response = await fetch('/app.php?command=my_albums');
             const albums = await response.json();
+
+            if (albums.length !== 0) {
+                document.getElementById('no-albums-warning').style.display = 'none';
+                return;
+            }
 
             albums.forEach((album) => {
                 const albumCard = albumCardTemplate.content.cloneNode(true);
