@@ -1,177 +1,204 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gallery</title>
-    <link rel="stylesheet" href="css/bootstrap.min.css">
-    <style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gallery</title>
+  <link rel="stylesheet" href="css/bootstrap.min.css">
+  <style>
+    body {
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+      margin: 0;
+    }
 
-      body {
-        display: flex;
-        flex-direction: column;
-        min-height: 100vh;
-        margin: 0;
-      }
 
+    main {
+      flex: 1;
+    }
 
-      main {
-        flex: 1;
-      }
+    footer {
+      background-color: #212529;
+      color: white;
+    }
 
+    footer h5 {
+      font-size: 1.25rem;
+      /* Adjust heading size for smaller screens */
+    }
+
+    footer p,
+    footer a {
+      font-size: 0.9rem;
+      /* Smaller text for mobile devices */
+    }
+
+    @media (max-width: 576px) {
       footer {
-        background-color: #212529;
-        color: white;
+        text-align: center;
+        /* Center-align all content for smaller devices */
       }
 
-      footer h5 {
-        font-size: 1.25rem; /* Adjust heading size for smaller screens */
+      footer .text-md-end {
+        text-align: center !important;
       }
-
-      footer p, footer a {
-        font-size: 0.9rem; /* Smaller text for mobile devices */
-      }
-
-      @media (max-width: 576px) {
-        footer {
-          text-align: center; /* Center-align all content for smaller devices */
-        }
-
-        footer .text-md-end {
-          text-align: center !important;
-        }
-      }
-    </style>
+    }
+  </style>
 </head>
 
 <body>
-    <header data-bs-theme="dark">
-        <div class="collapse text-bg-dark" id="navbarHeader">
-          <div class="container">
-            <div class="row">
-              <div class="col-sm-8 col-md-7 py-4">
-                <h4>За проекта</h4>
-                <p class="text-body-secondary">Проектът е съвместна работа на Боян Иванов (факултетен номер: 0MI0800011) и Симеон Георгиев (факултетен номер: 8MI0800025). Основната идея е да създадем приложение, което улеснява управлението на снимки, като позволява тяхното позициониране върху карта, редакция на GPS координати, контрол на достъпа (публични или частни снимки), както и лесен импорт и експорт на снимки с метаданни. Целта ни е да съчетаем удобство и функционалност за потребителите.</p>
-              </div>
-              <div class="col-sm-4 offset-md-1 py-4">
-                <h4>Връзки</h4>
-                <ul class="list-unstyled">
-                  <li><a href="https://www.pic2map.com/" class="text-white">Вдъхновение за идеята</a></li>
-                    <li><a href="/upload.html" class="text-white">Качи Снимка</a></li>
-                    <li><a href="/my_albums.html" class="text-white">Моите Албуми</a></li>
-                </ul>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="navbar navbar-dark bg-dark shadow-sm">
-          <div class="container">
-            <a href="#" class="navbar-brand d-flex align-items-center">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-geo" viewBox="0 0 16 16">
-                    <path fill-rule="evenodd" d="M8 1a3 3 0 1 0 0 6 3 3 0 0 0 0-6M4 4a4 4 0 1 1 4.5 3.969V13.5a.5.5 0 0 1-1 0V7.97A4 4 0 0 1 4 3.999zm2.493 8.574a.5.5 0 0 1-.411.575c-.712.118-1.28.295-1.655.493a1.3 1.3 0 0 0-.37.265.3.3 0 0 0-.057.09V14l.002.008.016.033a.6.6 0 0 0 .145.15c.165.13.435.27.813.395.751.25 1.82.414 3.024.414s2.273-.163 3.024-.414c.378-.126.648-.265.813-.395a.6.6 0 0 0 .146-.15l.015-.033L12 14v-.004a.3.3 0 0 0-.057-.09 1.3 1.3 0 0 0-.37-.264c-.376-.198-.943-.375-1.655-.493a.5.5 0 1 1 .164-.986c.77.127 1.452.328 1.957.594C12.5 13 13 13.4 13 14c0 .426-.26.752-.544.977-.29.228-.68.413-1.116.558-.878.293-2.059.465-3.34.465s-2.462-.172-3.34-.465c-.436-.145-.826-.33-1.116-.558C3.26 14.752 3 14.426 3 14c0-.599.5-1 .961-1.243.505-.266 1.187-.467 1.957-.594a.5.5 0 0 1 .575.411"/>
-                  </svg>
-              <strong>Photo Map</strong>
-            </a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarHeader" aria-controls="navbarHeader" aria-expanded="false" aria-label="Toggle navigation">
-              <span class="navbar-toggler-icon"></span>
-            </button>
-          </div>
-        </div>
-      </header>
-      <main>
-
-        <section class="py-5 text-center container">
-          <div class="row py-lg-5">
-            <div class="col-lg-6 col-md-8 mx-auto">
-              <h1 class="fw-light">Photo Map</h1>
-              <p class="lead text-body-secondary">
-                Уеб приложение, което превръща снимките в интерактивни точки на карта. Качвай, редактирай, споделяй и управлявай снимки с GPS координати – лесно и стилно. Публични или частни, албуми, времеви ограничения и мощни админ функции – всичко на едно място!</p>
-              <p>
-                <a href="/upload.html" class="btn btn-primary my-2">Качи Снимка</a>
-                <a href="/login.html" class="btn btn-secondary my-2" id="login-logout-btn">Влез</a>
-                <script>
-                  if (document.cookie != null) {
-                    document.querySelector('#login-logout-btn').innerText = 'Излез';
-                    document.querySelector('#login-logout-btn').href = '/app.php?command=logout';
-                  }
-                </script>
-
-              </p>
-
-              <a href="/my_albums.html" class="btn btn-primary my-2">Моите Албуми</a>
-
-            </div>
-          </div>
-        </section>
-
-        <div class="album py-5 bg-body-tertiary">
-          <div class="container">
-            <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3" id="frontpage-gallery">
-            </div>
-          </div>
-        </div>
-
-      </main>
-
-    <template id="image-card-template">
-      <div class="col">
-        <div class="card shadow-sm">
-          <div class="card-img-container">
-            <img class="card-img-top image-card" src="" alt="Image">
-          </div>
-          <div class="card-body">
-            <p class="card-text image-description"></p>
-            <div class="d-flex justify-content-between align-items-center">
-              <div class="btn-group">
-                <button type="button" class="btn btn-sm btn-outline-secondary">Show on Map</button>
-                <button type="button" class="btn btn-sm btn-outline-secondary">Edit</button>
-              </div>
-              <small class="text-body-secondary image-time-since"></small>
-            </div>
-            <p class="text-body-secondary">
-              <a href="#" class="album-link"></a>
-            </p>
-          </div>
-        </div>
-      </div>
-    </template>
-
-
-
-    <script src="js/bootstrap.min.js"></script>
-    <script src="js/gallery.js" type="module"></script>
-
-
-    <footer class="text-bg-dark py-4">
+  <header data-bs-theme="dark">
+    <div class="collapse text-bg-dark" id="navbarHeader">
       <div class="container">
         <div class="row">
-          <!-- About the Project -->
-          <div class="col-md-6 mb-3 mb-md-0">
-            <h5>About the Project</h5>
-            <p class="text-white">
-              This project is a collaboration between Boyan Ivanov and Simeon Georgiev, aiming to create an intuitive photo management app with map-based photo positioning, privacy control, and easy import/export options.
-            </p>
+          <div class="col-sm-8 col-md-7 py-4">
+            <h4>За проекта</h4>
+            <p class="text-body-secondary">Проектът е съвместна работа на Боян Иванов (факултетен номер: 0MI0800011) и
+              Симеон Георгиев (факултетен номер: 8MI0800025). Основната идея е да създадем приложение, което улеснява
+              управлението на снимки, като позволява тяхното позициониране върху карта, редакция на GPS координати,
+              контрол на достъпа (публични или частни снимки), както и лесен импорт и експорт на снимки с метаданни.
+              Целта ни е да съчетаем удобство и функционалност за потребителите.</p>
           </div>
-          <!-- Quick Links -->
-          <div class="col-md-3 mb-3 mb-md-0">
-            <h5>Quick Links</h5>
+          <div class="col-sm-4 offset-md-1 py-4">
+            <h4>Връзки</h4>
             <ul class="list-unstyled">
-              <li><a href="/upload.html" class="text-white text-decoration-none">Upload Photo</a></li>
-              <li><a href="#" class="text-white text-decoration-none">Login</a></li>
-              <li><a href="https://www.pic2map.com/" class="text-white text-decoration-none">Inspiration</a></li>
+              <li><a href="https://www.pic2map.com/" class="text-white">Вдъхновение за идеята</a></li>
+              <li><a href="/upload.html" class="text-white">Качи Снимка</a></li>
+              <li><a href="/my_albums.html" class="text-white">Моите Албуми</a></li>
             </ul>
-          </div>
-          <!-- Contact Us -->
-          <div class="col-md-3 text-md-end">
-            <h5>Contact Us</h5>
-            <p class="text-white mb-1">For inquiries:
-              <a href="mailto:info@photomap.com" class="text-white text-decoration-none">info@photomap.com</a>
-            </p>
-            <p class="text-white mb-0">&copy; 2025 Photo Map. All rights reserved.</p>
           </div>
         </div>
       </div>
-    </footer>
+    </div>
+    <div class="navbar navbar-dark bg-dark shadow-sm">
+      <div class="container">
+        <a href="#" class="navbar-brand d-flex align-items-center">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-geo"
+            viewBox="0 0 16 16">
+            <path fill-rule="evenodd"
+              d="M8 1a3 3 0 1 0 0 6 3 3 0 0 0 0-6M4 4a4 4 0 1 1 4.5 3.969V13.5a.5.5 0 0 1-1 0V7.97A4 4 0 0 1 4 3.999zm2.493 8.574a.5.5 0 0 1-.411.575c-.712.118-1.28.295-1.655.493a1.3 1.3 0 0 0-.37.265.3.3 0 0 0-.057.09V14l.002.008.016.033a.6.6 0 0 0 .145.15c.165.13.435.27.813.395.751.25 1.82.414 3.024.414s2.273-.163 3.024-.414c.378-.126.648-.265.813-.395a.6.6 0 0 0 .146-.15l.015-.033L12 14v-.004a.3.3 0 0 0-.057-.09 1.3 1.3 0 0 0-.37-.264c-.376-.198-.943-.375-1.655-.493a.5.5 0 1 1 .164-.986c.77.127 1.452.328 1.957.594C12.5 13 13 13.4 13 14c0 .426-.26.752-.544.977-.29.228-.68.413-1.116.558-.878.293-2.059.465-3.34.465s-2.462-.172-3.34-.465c-.436-.145-.826-.33-1.116-.558C3.26 14.752 3 14.426 3 14c0-.599.5-1 .961-1.243.505-.266 1.187-.467 1.957-.594a.5.5 0 0 1 .575.411" />
+          </svg>
+          <strong>Photo Map</strong>
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarHeader"
+          aria-controls="navbarHeader" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+      </div>
+    </div>
+  </header>
+  <main>
+
+    <div class="modal fade" id="viewImage" tabindex="-1" aria-labelledby="viewImageLabel" aria-hidden="true">
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <div class="modal-body">
+            <img src="" id="modalImage" class="img-fluid" alt="Full View"
+              style="display: block; max-width: 100%; height: auto; margin: auto;">
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <section class="py-5 text-center container">
+      <div class="row py-lg-5">
+        <div class="col-lg-6 col-md-8 mx-auto">
+          <h1 class="fw-light">Photo Map</h1>
+          <p class="lead text-body-secondary">
+            Уеб приложение, което превръща снимките в интерактивни точки на карта. Качвай, редактирай, споделяй и
+            управлявай снимки с GPS координати – лесно и стилно. Публични или частни, албуми, времеви ограничения и
+            мощни админ функции – всичко на едно място!</p>
+          <p>
+            <a href="/upload.html" class="btn btn-primary my-2">Качи Снимка</a>
+            <a href="/login.html" class="btn btn-secondary my-2" id="login-logout-btn">Влез</a>
+            <script>
+              if (document.cookie) {
+                document.querySelector('#login-logout-btn').innerText = 'Излез';
+                document.querySelector('#login-logout-btn').href = '/app.php?command=logout';
+              }
+            </script>
+
+          </p>
+
+          <a href="/my_albums.html" class="btn btn-primary my-2">Моите Албуми</a>
+          <a href="/image_map.html" class="btn btn-secondary my-2">Карта на Снимките</a>
+
+
+        </div>
+      </div>
+    </section>
+
+    <div class="album py-5 bg-body-tertiary">
+      <div class="container">
+        <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3" id="frontpage-gallery">
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <template id="image-card-template">
+    <div class="col">
+      <div class="card shadow-sm">
+        <div class="card-img-container">
+          <img class="card-img-top image-card" src="" alt="Image">
+        </div>
+        <div class="card-body">
+          <p class="card-text image-description"></p>
+          <div class="d-flex justify-content-between align-items-center">
+            <div class="btn-group">
+              <a href="#" type="button" class="btn btn-sm btn-outline-secondary">Show on Map</a>
+              <a href="#" type="button" class="btn btn-sm btn-outline-secondary edit-btn">Edit</a>
+            </div>
+            <small class="text-body-secondary image-time-since"></small>
+          </div>
+          <p class="text-body-secondary">
+            <a href="#" class="album-link"></a>
+          </p>
+        </div>
+      </div>
+    </div>
+  </template>
+
+
+
+  <script src="js/bootstrap.min.js"></script>
+  <script src="js/gallery.js" type="module"></script>
+
+
+  <footer class="text-bg-dark py-4">
+    <div class="container">
+      <div class="row">
+        <!-- About the Project -->
+        <div class="col-md-6 mb-3 mb-md-0">
+          <h5>About the Project</h5>
+          <p class="text-white">
+            This project is a collaboration between Boyan Ivanov and Simeon Georgiev, aiming to create an intuitive
+            photo management app with map-based photo positioning, privacy control, and easy import/export options.
+          </p>
+        </div>
+        <!-- Quick Links -->
+        <div class="col-md-3 mb-3 mb-md-0">
+          <h5>Quick Links</h5>
+          <ul class="list-unstyled">
+            <li><a href="/upload.html" class="text-white text-decoration-none">Upload Photo</a></li>
+            <li><a href="#" class="text-white text-decoration-none">Login</a></li>
+            <li><a href="https://www.pic2map.com/" class="text-white text-decoration-none">Inspiration</a></li>
+          </ul>
+        </div>
+        <!-- Contact Us -->
+        <div class="col-md-3 text-md-end">
+          <h5>Contact Us</h5>
+          <p class="text-white mb-1">For inquiries:
+            <a href="mailto:info@photomap.com" class="text-white text-decoration-none">info@photomap.com</a>
+          </p>
+          <p class="text-white mb-0">&copy; 2025 Photo Map. All rights reserved.</p>
+        </div>
+      </div>
+    </div>
+  </footer>
 </body>
 
 </html>

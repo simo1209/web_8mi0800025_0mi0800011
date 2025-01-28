@@ -17,6 +17,9 @@ class ImageController
         $router->register('GET', 'latest_images', [$this, 'index']);
         $router->register('POST', 'upload_image', [$this, 'upload']);
         $router->register('GET', 'image', [$this, 'serve_static_image']);
+        $router->register('GET', 'get_image_by_id', [$this, 'get_image_by_id']);
+        $router->register('POST', 'update_image_by_id', [$this, 'update_image_by_id']);
+        $router->register('DELETE', 'delete_image_by_id', [$this, 'delete_image_by_id']);
         $router->register('GET', 'export_album', [$this, 'exportAlbum']); // Register the export method
     }
 
@@ -25,6 +28,7 @@ class ImageController
             SELECT
                 images.dbname AS image_id,
                 images.descr,
+                geo_data,
                 albums.id AS album_id,
                 albums.name AS album_name,
                 images.created_at AS created_at
@@ -36,6 +40,108 @@ class ImageController
         ");
 
         return $images;
+    }
+
+    public function get_image_by_id($data) {
+        if (!isset($data['image_id'])) {
+            return ['err' => 'Image ID not provided'];
+        }
+
+        $stmt = $this->db->run("
+            SELECT
+                images.dbname AS image_id,
+                images.descr,
+                geo_data,
+                visibility,
+                albums.id AS album_id,
+                albums.name AS album_name,
+                images.created_at AS created_at
+            FROM images
+            JOIN albums ON images.album_id = albums.id
+            WHERE images.dbname = :dbname
+            LIMIT 1
+        ", ['dbname' => $data['image_id']]);
+
+        $image = $stmt->fetch();
+
+        if ($image) {
+            return $image;
+        } else {
+            return ['err' => 'Image not found'];
+        }
+    }
+
+    public function update_image_by_id($data) {
+        if (!isset($data['image_id'])) {
+            return ['err' => 'Image ID not provided', 'data' => $data, 'post' => $_POST];
+        }
+
+        session_start();
+        if (!isset($_SESSION['user_id'])) {
+            return ['err' => 'User not authenticated'];
+        }
+
+        $stmt = $this->db->run("SELECT *, albums.owner_id FROM images JOIN albums ON images.album_id = albums.id WHERE dbname = :dbname", ['dbname' => $data['image_id']]);
+        $image = $stmt->fetch();
+
+        if (!$image) {
+            return ['err' => 'Image not found'];
+        }
+
+        if ($image['owner_id'] !== $_SESSION['user_id']) {
+            return ['err' => 'User does not have permission to update this image', 'image' => $image];
+        }
+
+        $stmt = $this->db->run("
+            UPDATE images
+            SET descr = :descr, visibility = :visibility, geo_data = :geo_data
+            WHERE dbname = :dbname
+            RETURNING *
+        ", [
+            'dbname' => $data['image_id'],
+            'descr' => $data['descr'] ?? null,
+            'visibility' => $data['visibility'] ?? 'public',
+            'geo_data' => $data['geo_data'] ?? null
+        ]);
+
+        $image = $stmt->fetch();
+
+        if ($image) {
+            return ['msg' => 'Image updated successfully', 'image' => [
+                'image_id' => $image['dbname'],
+                'descr' => $image['descr'],
+                'visibility' => $image['visibility'],
+                'geo_data' => $image['geo_data']
+            ]];
+        } else {
+            return ['err' => 'Image not found'];
+        }
+    }
+
+    public function delete_image_by_id($data) {
+        if (!isset($data['image_id'])) {
+            return ['err' => 'Image ID not provided'];
+        }
+
+        session_start();
+        if (!isset($_SESSION['user_id'])) {
+            return ['err' => 'User not authenticated'];
+        }
+
+        $stmt = $this->db->run("SELECT *, albums.owner_id FROM images JOIN albums ON images.album_id = albums.id WHERE dbname = :dbname", ['dbname' => $data['image_id']]);
+        $image = $stmt->fetch();
+
+        if (!$image) {
+            return ['err' => 'Image not found'];
+        }
+
+        if ($image['owner_id'] !== $_SESSION['user_id']) {
+            return ['err' => 'User does not have permission to delete this image', 'image' => $image];
+        }
+
+        $this->db->run("DELETE FROM images WHERE dbname = :dbname", ['dbname' => $data['image_id']]);
+
+        return ['msg' => 'Image deleted successfully'];
     }
 
     public function serve_static_image($data) {

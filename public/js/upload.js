@@ -507,3 +507,6 @@ async function importZip() {
 document.addEventListener('DOMContentLoaded', () => {
   fetchAlbums();
 });
+
+
+document.getElementById('editGeo').addEventListener('shown.bs.modal', initMap);
