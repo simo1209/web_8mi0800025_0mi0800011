@@ -16,6 +16,7 @@ class UserController
     {
         $router->register('POST', 'login', [$this, 'login']);
         $router->register('POST', 'signup', [$this, 'signup']);
+        $router->register('GET', 'logout', [$this, 'logout']);
     }
 
     public function signup($data)
@@ -117,6 +118,32 @@ class UserController
         return ['msg' => 'Login successful', 'session_token' => $sessionToken];
     }
     
+    public function logout()
+    {
+        session_start();
+        
+        // Check if the user is logged in
+        if (isset($_SESSION['user_id'], $_SESSION['session_token'])) {
+            // Remove the session token from the database
+            $this->db->run(
+                "DELETE FROM sessions WHERE user_id = :user_id AND session_token = :session_token",
+                [
+                    'user_id' => $_SESSION['user_id'],
+                    'session_token' => $_SESSION['session_token']
+                ]
+            );
 
+        }
+        
+        $_SESSION = array();
+        setcookie(session_name(), '', time() - 3600, '/');
+
+        // Destroy the session
+        session_unset();
+        session_destroy();
+        
+        header('Location: /login.html'); // Redirect to login or homepage
+        return ['msg' => 'Logout successful'];
+    }
 }
 

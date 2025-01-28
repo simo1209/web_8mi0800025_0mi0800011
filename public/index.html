@@ -90,7 +90,7 @@
                 <a href="/upload.html" class="btn btn-primary my-2">Качи Снимка</a>
                 <a href="/login.html" class="btn btn-secondary my-2" id="login-logout-btn">Влез</a>
                 <script>
-                  if (document.cookie != null) {
+                  if (document.cookie) {
                     document.querySelector('#login-logout-btn').innerText = 'Излез';
                     document.querySelector('#login-logout-btn').href = '/app.php?command=logout';
                   }
