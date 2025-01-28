@@ -172,47 +172,49 @@
 
 
     <div class="mb-3">
-      <label for="albumSelection" class="form-label">Select an Album</label>
+      <label for="albumSelection" class="form-label">Избери албум</label>
       <div class="d-flex">
         <select class="form-select" id="albumSelection">
-          <option value="" selected>Choose an existing album</option>
+          <option value="" selected>Избери съществуващ албум</option>
           <!-- Dynamically populate album options here -->
         </select>
-        <button class="btn btn-outline-secondary ms-2" data-bs-toggle="modal" data-bs-target="#newAlbumModal">Create New Album</button>
+        <button class="btn btn-outline-secondary ms-2" data-bs-toggle="modal" data-bs-target="#newAlbumModal">Създай нов албум</button>
       </div>
     </div>
 
-    <h1 class="text-center mb-4">Upload Images</h1>
+    <h1 class="text-center mb-4">Kaчи снимки</h1>
+
+    <button class="btn btn-secondary w-100 mb-3" id="importZipButton">Вкарай ZIP файл</button>
     <div 
       id="dragDropArea" 
       class="drag-drop-area" 
       ondragover="handleDragOver(event)" 
       ondragleave="handleDragLeave(event)" 
       ondrop="handleDrop(event)">
-      Drag and drop your images here or click to upload
+      Дръпни и пусни снимки тук или натисни за избор
       <input type="file" id="fileInput" accept="image/*" multiple hidden onchange="handleFiles(this.files)">
     </div>
 
     <div class="d-flex justify-content-end mt-3">
-      <button class="btn btn-outline-primary me-2" onclick="updateAllVisibility('public')">Set All to Public</button>
-      <button class="btn btn-outline-secondary" onclick="updateAllVisibility('private')">Set All to Private</button>
+      <button class="btn btn-outline-primary me-2" onclick="updateAllVisibility('public')">Задай всички като публични</button>
+      <button class="btn btn-outline-secondary" onclick="updateAllVisibility('private')">Задай всички като частни</button>
     </div>
 
     <table class="table table-striped mt-3">
       <thead>
         <tr>
-          <th>Image</th>
-          <th>Description</th>
-          <th>Visibility</th>
-          <th>Geolocation</th>
-          <th>Status</th>
+          <th>Снимка</th>
+          <th>Описание</th>
+          <th>Видимост</th>
+          <th>Геолокация</th>
+          <th>Статус</th>
         </tr>
       </thead>
       <tbody id="previewTableBody">
       </tbody>
     </table>
 
-    <button class="btn btn-primary w-100 mt-4" id="submitAllButton" onclick="submitAll()">Submit All</button>
+    <button class="btn btn-primary w-100 mt-4" id="submitAllButton" onclick="submitAll()">Изпрати всички</button>
   </div>
 
 
@@ -251,6 +253,7 @@
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
   <script src="/js/upload.js"></script>
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/jszip/dist/jszip.min.js"></script>
 
   <script src="/js/map.js"></script>
 </body>
