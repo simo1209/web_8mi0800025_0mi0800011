@@ -22,7 +22,7 @@ function timeSince(date) {
   return 'just now';
 }
 
-function viewImage(image, imageEl) {
+function viewImage(image) {
   document.querySelector('#viewImage img').setAttribute('src', `/app.php?command=image&image_id=${image.image_id}`);
   new bootstrap.Modal(document.getElementById('viewImage')).show();
 }
@@ -39,7 +39,7 @@ try {
     const imageEl = imageCardClone.querySelector('.image-card');
     imageEl.setAttribute('src', `/app.php?command=image&image_id=${image.image_id}`);
     // imageEl.setAttribute('data-image-id', image.image_id);
-    imageEl.addEventListener('click', () => viewImage(image, imageEl));
+    imageEl.addEventListener('click', () => viewImage(image));
 
     imageCardClone.querySelector('.image-description').textContent = image.descr;
 
