@@ -5,6 +5,41 @@ const imageId = new URLSearchParams(window.location.search).get('image_id')
 const image = new Image();
 image.src = `/app.php?command=image&image_id=${imageId}`;
 
+
+document.addEventListener('DOMContentLoaded', async () => {
+    const response = await fetch(`/app.php?command=get_image_by_id&image_id=${imageId}`);
+    const image = await response.json();
+    document.querySelector('#image-description').textContent = image.descr;
+    document.querySelector('#image-visibility').value = image.visibility;
+
+    initMap(Object.values(JSON.parse(image.geo_data)));
+});
+
+document.querySelector('#save-btn').addEventListener('click', async () => {
+    const visibility = document.querySelector('#image-visibility').value;
+    const descr = document.querySelector('#image-description').value;
+    const geoData = JSON.stringify(marker.getLatLng());
+
+    const response = await fetch('/app.php?command=update_image_by_id', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            descr,
+            image_id: imageId,
+            visibility,
+            geo_data: geoData,
+        }),
+    });
+
+    if (response.ok) {
+        document.querySelector('#save-image').textContent = 'Saved!';
+    } else {
+        alert('Failed to save image');
+    }
+});
+
 const cropRect = { x: 50, y: 50, width: 200, height: 150 };
 
 image.onload = function () {
@@ -138,5 +173,3 @@ function cropImage() {
 
     document.querySelector('#crop-btn').innerHTML = 'Cropped!';
 }
-
-initMap();

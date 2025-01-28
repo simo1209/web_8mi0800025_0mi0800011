@@ -33,12 +33,16 @@ try {
   const images = await imagesRequest.json();
 
   for (const image of images) {
-    console.log(image);
     const imageCardClone = imageCardTemplate.content.cloneNode(true);
 
     // Set image source and description
     const imageEl = imageCardClone.querySelector('.image-card');
     imageEl.setAttribute('src', `/app.php?command=image&image_id=${image.image_id}`);
+    imageCardClone.querySelector('.edit-btn').setAttribute(
+      'href',
+      `/edit.html?image_id=${image.image_id}`
+  );
+
     // imageEl.setAttribute('data-image-id', image.image_id);
     imageEl.addEventListener('click', () => viewImage(image));
 

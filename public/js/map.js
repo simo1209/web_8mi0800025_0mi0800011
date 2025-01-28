@@ -1,16 +1,14 @@
 let map, marker;
 
-const defaultCoords = [42.674435, 23.330431]; // Default coordinates
-
-function initMap() {
+function initMap(coords = [42.674435, 23.330431]) {
   // Initialize map only once
   if (!map) {
-    map = L.map('map').setView(defaultCoords, 13); // Default coordinates
+    map = L.map('map').setView(coords, 13); // Default coordinates
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
       maxZoom: 19,
     }).addTo(map);
 
-    marker = L.marker(defaultCoords, { draggable: true }).addTo(map);
+    marker = L.marker(coords, { draggable: true }).addTo(map);
 
     // Update input fields when marker is dragged
     marker.on('dragend', () => {
