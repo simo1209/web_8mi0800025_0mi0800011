@@ -419,6 +419,9 @@ async function importZip() {
         return;
       }
 
+      const dataTransfer = new DataTransfer();
+
+
       // Process each image entry in metadata
       for (const [index, imageMeta] of metadata.images.entries()) {
         const { filename, description, visibility, geo_data } = imageMeta;
@@ -447,8 +450,8 @@ async function importZip() {
         }
         const imageFile = new File([blob], filename, { type: mimeType });
 
-
-        handleSingleFile(imageFile);
+        dataTransfer.items.add(imageFile);
+        // handleSingleFile(imageFile);
 
         // Wait a tick so handleFiles finishes (since it uses FileReader)
         await new Promise((res) => setTimeout(res, 0));
@@ -492,6 +495,9 @@ async function importZip() {
           }
         }
       }
+
+      fileInput.files = dataTransfer.files;
+      handleFiles(dataTransfer.files);
     } catch (err) {
       console.error('Error processing ZIP:', err);
       alert(`Failed to process ZIP: ${err.message}`);

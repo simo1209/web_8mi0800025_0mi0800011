@@ -7,7 +7,10 @@ const downloadAlbumBtn = document.getElementById('download-album-btn');
 
 // Helper function to calculate time since a date
 function timeSince(date) {
-    const seconds = Math.floor((new Date() - new Date(date)) / 1000);
+    let dateDiff = new Date() - new Date(date) - (2 * 60 * 60 * 1000); // I 
+  const seconds = Math.floor(dateDiff) / 1000;
+    
+    // am perfectly aware timezones dont work like this
     const intervals = [
         { label: 'year', seconds: 31536000 },
         { label: 'month', seconds: 2592000 },
