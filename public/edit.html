@@ -122,7 +122,7 @@
             <!-- Image Description -->
             <div class="col-md-12">
                 <div class="mb-3">
-                    <label for="image-description" class="form-label">Image Description</label>
+                    <label for="image-description" class="form-label">Описание на снимката</label>
                     <textarea class="form-control" id="image-description" rows="3"></textarea>
                 </div>
             </div>
@@ -132,16 +132,16 @@
                 <!-- Image Description -->
                 <div class="col-md-12">
                     <div class="mb-3">
-                        <label for="image-description" class="form-label">Image Visibility</label>
+                        <label for="image-description" class="form-label">Видимост на снимката</label>
                         <select class="form-select" id="image-visibility">
-                            <option value="public" selected>Public</option>
-                            <option value="private">Private</option>
+                            <option value="public" selected>Публична</option>
+                            <option value="private">Частна</option>
                         </select>
                     </div>
                 </div>
 
                 <div class="row justify-content-center">
-                    <h3>Resize Image</h3>
+                    <h3>Преоразмери снимката</h3>
                     <!-- Canvas Section -->
                     <div class="col-md-8 canvas-wrapper">
                         <div id="canvas-container">
@@ -151,7 +151,7 @@
 
                     <!-- Buttons Section -->
                     <div class="col-md-4 d-flex flex-column align-items-center">
-                        <h3 class="mb-3">Preset Crop Sizes</h3>
+                        <h3 class="mb-3 text-center">Предефинирани размери за изрязване</h3>
                         <input type="number" id="crop-width" class="form-control mb-3" placeholder="Width"
                             onchange="setCropWidth(this.value)" value="200">
                         <input type="number" id="crop-height" class="form-control mb-3" placeholder="Height"
@@ -163,12 +163,12 @@
             <button class="btn btn-outline-primary mb-3" onclick="setCropSize(400, 250)">400x250</button> -->
                         <button class="btn btn-outline-primary mb-3" onclick="setCropSize(400, 400)">Facebook</button>
                         <button class="btn btn-outline-primary mb-3" onclick="setCropSize(320, 400)">Instagram</button>
-                        <button class="btn btn-success mt-3" id="#crop-btn" onclick="cropImage()">Crop</button>
+                        <button class="btn btn-success mt-3" id="#crop-btn" onclick="cropImage()">Изрежи</button>
                     </div>
                 </div>
                 <div class="row justify-content-center">
 
-                    <h3>Change Image Location</h3>
+                    <h3>Смени локацията на снимката</h3>
 
                     <div class="col-md-8 d-flex justify-content-center align-items-center">
                         <div id="map" style="height: 60%; width: 60%; margin: 1em; min-height: 400px;"></div>
@@ -184,52 +184,56 @@
                 </div>
 
                 <div class="row justify-content-end">
-                    <button class="btn btn-success mt-3" id="save-btn">Save Changes</button>
-                    <button class="btn btn-danger mt-3" id="delete-btn">Delete</button>
+                    <button class="btn btn-success mt-3" id="save-btn">Запази промените</button>
+                    <button class="btn btn-danger mt-3" id="delete-btn">Изтрий</button>
                 </div>
 
             </div>
 
-            <footer class="text-bg-dark py-4">
-                <div class="container">
-                    <div class="row">
-                        <!-- About the Project -->
-                        <div class="col-md-6 mb-3 mb-md-0">
-                            <h5>About the Project</h5>
-                            <p class="text-white">
-                                This project is a collaboration between Boyan Ivanov and Simeon Georgiev, aiming to
-                                create an intuitive photo management app with map-based photo positioning, privacy
-                                control, and easy import/export options.
-                            </p>
-                        </div>
-                        <!-- Quick Links -->
-                        <div class="col-md-3 mb-3 mb-md-0">
-                            <h5>Quick Links</h5>
-                            <ul class="list-unstyled">
-                                <li><a href="/upload.html" class="text-white text-decoration-none">Upload Photo</a></li>
-                                <li><a href="#" class="text-white text-decoration-none">Login</a></li>
-                                <li><a href="https://www.pic2map.com/"
-                                        class="text-white text-decoration-none">Inspiration</a></li>
-                            </ul>
-                        </div>
-                        <!-- Contact Us -->
-                        <div class="col-md-3 text-md-end">
-                            <h5>Contact Us</h5>
-                            <p class="text-white mb-1">For inquiries:
-                                <a href="mailto:info@photomap.com"
-                                    class="text-white text-decoration-none">info@photomap.com</a>
-                            </p>
-                            <p class="text-white mb-0">&copy; 2025 Photo Map. All rights reserved.</p>
-                        </div>
-                    </div>
-                </div>
-            </footer>
+
 
             <script src="/js/bootstrap.bundle.min.js"></script>
             <script src="/js/leaflet.js"></script>
 
             <script src="/js/map.js"></script>
             <script src="/js/edit.js"></script>
+
+        </div>
+    </div>
+
+
+    <footer class="text-bg-dark py-4 mt-5">
+        <div class="container">
+            <div class="row">
+                <!-- About the Project -->
+                <div class="col-md-6 mb-3 mb-md-0">
+                    <h5>За проекта</h5>
+                    <p class="text-white">
+                        Този проект е създаден от Боян Иванов (факултетен номер: 0MI0800011) и Симеон Георгиев (факултетен номер: 8MI0800025). Целта на приложението е да предостави удобен начин за управление на снимки, като позволява тяхното позициониране върху карта, редакция на GPS координати, контрол на достъпа (публични или частни снимки), както и лесен импорт и експорт на снимки с метаданни. Надяваме се, че ще ви хареса!
+                    </p>
+                </div>
+                <!-- Quick Links -->
+                <div class="col-md-3 mb-3 mb-md-0">
+                    <h5>Бързи линкове</h5>
+                    <ul class="list-unstyled">
+                        <li><a href="/upload.html" class="text-white text-decoration-none">Качи снимка</a></li>
+                        <li><a href="/login.html" class="text-white text-decoration-none">Влез</a></li>
+                        <li><a href="https://www.pic2map.com/" class="text-white text-decoration-none">Вдъхновение</a></li>
+                        <li><a href="/my_albums.html" class="text-white text-decoration-none">Моите албуми</a></li>
+                        <li><a href="/image_map.html" class="text-white text-decoration-none">Карта на снимките</a></li>
+                    </ul>
+                </div>
+                <!-- Contact Us -->
+                <div class="col-md-3 text-md-end">
+                    <h5>Контакти</h5>
+                    <p class="text-white mb-1">За въпроси:
+                        <a href="mailto:info@photomap.com" class="text-white text-decoration-none">info@photomap.com</a>
+                    </p>
+                    <p class="text-white mb-0">&copy; 2025 Photo Map. All rights reserved.</p>
+                </div>
+            </div>
+        </div>
+    </footer>
 </body>
 
 </html>
