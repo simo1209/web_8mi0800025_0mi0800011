@@ -113,7 +113,7 @@ document.addEventListener("mouseup", () => {
     isDragging = false;
 });
 
-function downloadCroppedImage() {
+function cropImage() {
     const croppedCanvas = document.createElement("canvas");
     croppedCanvas.width = cropRect.width;
     croppedCanvas.height = cropRect.height;
@@ -134,5 +134,9 @@ function downloadCroppedImage() {
     const link = document.createElement("a");
     link.download = "cropped-image.png";
     link.href = croppedCanvas.toDataURL();
-    link.click();
+    // link.click();
+
+    document.querySelector('#crop-btn').innerHTML = 'Cropped!';
 }
+
+initMap();

@@ -25,6 +25,7 @@ class ImageController
             SELECT
                 images.dbname AS image_id,
                 images.descr,
+                geo_data,
                 albums.id AS album_id,
                 albums.name AS album_name,
                 images.created_at AS created_at
