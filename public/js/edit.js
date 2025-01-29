@@ -34,7 +34,7 @@ document.querySelector('#save-btn').addEventListener('click', async () => {
     });
 
     if (response.ok) {
-        document.querySelector('#save-image').textContent = 'Saved!';
+        document.querySelector('#save-btn').textContent = 'Saved!';
         window.location.href = '/my_albums.html';
     } else {
         alert('Failed to save image');

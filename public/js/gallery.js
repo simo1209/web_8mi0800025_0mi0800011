@@ -29,7 +29,7 @@ function viewImage(image) {
 }
 
 try {
-  const imagesRequest = await fetch('/app.php?command=latest_images');
+  const imagesRequest = await fetch('/app.php?command=latest_images&limit=12');
   const images = await imagesRequest.json();
 
   for (const image of images) {
@@ -38,10 +38,16 @@ try {
     // Set image source and description
     const imageEl = imageCardClone.querySelector('.image-card');
     imageEl.setAttribute('src', `/app.php?command=image&image_id=${image.image_id}`);
-    imageCardClone.querySelector('.edit-btn').setAttribute(
-      'href',
-      `/edit.html?image_id=${image.image_id}`
-  );
+
+    if (image.can_edit) {
+      imageCardClone.querySelector('.edit-btn').setAttribute(
+        'href',
+        `/edit.html?image_id=${image.image_id}`
+      );
+    } else {
+      imageCardClone.querySelector('.edit-btn').remove();
+    }
+    
 
     // imageEl.setAttribute('data-image-id', image.image_id);
     imageEl.addEventListener('click', () => viewImage(image));

@@ -23,7 +23,16 @@ class ImageController
         $router->register('GET', 'export_album', [$this, 'exportAlbum']); // Register the export method
     }
 
-    public function index() {
+    public function index($data) {
+
+
+      session_start();
+      $user_id = $_SESSION['user_id'] ?? null;
+
+      $images;
+      if (isset($data['limit'])) {
+        $limit = $data['limit'];
+
         $images = $this->db->rows("
             SELECT
                 images.dbname AS image_id,
@@ -31,13 +40,32 @@ class ImageController
                 geo_data,
                 albums.id AS album_id,
                 albums.name AS album_name,
-                images.created_at AS created_at
+                images.created_at AS created_at,
+                albums.owner_id = :user_id as can_edit       
             FROM images
             JOIN albums ON images.album_id = albums.id
             WHERE images.visibility = 'public'
             ORDER BY images.created_at DESC
             LIMIT 12
-        ");
+        ", ['user_id' => $user_id]);
+
+      } else {
+        $images = $this->db->rows("
+            SELECT
+                images.dbname AS image_id,
+                images.descr,
+                geo_data,
+                albums.id AS album_id,
+                albums.name AS album_name,
+                images.created_at AS created_at,
+                albums.owner_id = :user_id as can_edit       
+            FROM images
+            JOIN albums ON images.album_id = albums.id
+            WHERE images.visibility = 'public'
+            ORDER BY images.created_at DESC
+        ", ['user_id' => $user_id]);
+      } 
+
 
         return $images;
     }
