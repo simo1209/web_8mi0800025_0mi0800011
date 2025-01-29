@@ -3,8 +3,20 @@ let images;
 
 document.addEventListener('DOMContentLoaded', async () => {
     try {
-        const imagesRequest = await fetch('/app.php?command=latest_images');
-        images = await imagesRequest.json();
+
+        
+        const urlParams = new URLSearchParams(window.location.search);
+        const imageId = urlParams.get('image_id');
+
+        if ( imageId ) {
+          console.log('image_id', imageId);
+          const imagesRequest = await fetch(`/app.php?command=get_image_by_id&image_id=${imageId}`);
+          images = [ await imagesRequest.json() ];
+        } else {
+          const imagesRequest = await fetch('/app.php?command=latest_images');
+          images = await imagesRequest.json();
+        }
+
 
         // for (const image of images) {
         //   console.log(image);

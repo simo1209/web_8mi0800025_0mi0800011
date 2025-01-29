@@ -59,6 +59,9 @@ try {
     albumLink.textContent = `Album: ${image.album_name}`;
     albumLink.setAttribute('href', `/album.html?album_id=${image.album_id}`);
 
+    const showOnMapLink = imageCardClone.querySelector('.image-map');
+    showOnMapLink.setAttribute('href', `/image_map.html?image_id=${image.image_id}`);
+
     // Calculate and set "time since" field
     const timeSinceText = timeSince(image.created_at);
     imageCardClone.querySelector('.image-time-since').textContent = timeSinceText;
