@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Albums</title>
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+
+
+    <style>
+
+        body {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            margin: 0;
+        }
+
+
+        main {
+            flex: 1;
+        }
+
+        footer {
+            background-color: #212529;
+            color: white;
+        }
+
+        footer h5 {
+            font-size: 1.25rem; /* Adjust heading size for smaller screens */
+        }
+
+        footer p, footer a {
+            font-size: 0.9rem; /* Smaller text for mobile devices */
+        }
+
+        @media (max-width: 576px) {
+            footer {
+                text-align: center; /* Center-align all content for smaller devices */
+            }
+
+            footer .text-md-end {
+                text-align: center !important;
+            }
+        }
+    </style>
+</head>
+
+<body>
+<header>
+    <div class="navbar navbar-dark bg-dark shadow-sm">
+        <div class="container">
+            <a href="index.html" class="navbar-brand">Photo Map</a>
+        </div>
+    </div>
+</header>
+
+<main>
+    <section class="py-5 container">
+        <h1 class="text-center">Моите албуми</h1>
+
+        <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3" id="album-list">
+            <h3 class="text-center" id="no-albums-warning">Липсват ви албуми</h3>
+        </div>
+    </section>
+</main>
+
+<template id="album-card-template">
+    <div class="col">
+        <div class="card shadow-sm">
+            <div class="card-body">
+                <h5 class="card-title album-name"></h5>
+                <p class="card-text album-description"></p>
+                <a href="#" class="btn btn-primary view-album">Виж албум</a>
+            </div>
+        </div>
+    </div>
+</template>
+
+<script src="js/my_albums.js"></script>
+</body>
+
+<footer class="text-bg-dark py-4">
+    <div class="container">
+        <div class="row">
+            <!-- About the Project -->
+            <div class="col-md-6 mb-3 mb-md-0">
+                <h5>За проекта</h5>
+                <p class="text-white">
+                    Този проект е създаден от Боян Иванов (факултетен номер: 0MI0800011) и Симеон Георгиев (факултетен номер: 8MI0800025). Целта на приложението е да предостави удобен начин за управление на снимки, като позволява тяхното позициониране върху карта, редакция на GPS координати, контрол на достъпа (публични или частни снимки), както и лесен импорт и експорт на снимки с метаданни. Надяваме се, че ще ви хареса!
+                </p>
+            </div>
+            <!-- Quick Links -->
+            <div class="col-md-3 mb-3 mb-md-0">
+                <h5>Бързи линкове</h5>
+                <ul class="list-unstyled">
+                    <li><a href="upload.html" class="text-white text-decoration-none">Качи снимка</a></li>
+                    <li><a href="login.html" class="text-white text-decoration-none">Влез</a></li>
+                    <li><a href="https://www.pic2map.com/" class="text-white text-decoration-none">Вдъхновение</a></li>
+                    <li><a href="my_albums.html" class="text-white text-decoration-none">Моите албуми</a></li>
+                    <li><a href="image_map.html" class="text-white text-decoration-none">Карта на снимките</a></li>
+                </ul>
+            </div>
+            <!-- Contact Us -->
+            <div class="col-md-3 text-md-end">
+                <h5>Контакти</h5>
+                <p class="text-white mb-1">За въпроси:
+                    <a href="mailto:info@photomap.com" class="text-white text-decoration-none">info@photomap.com</a>
+                </p>
+                <p class="text-white mb-0">&copy; 2025 Photo Map. All rights reserved.</p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+</html>
