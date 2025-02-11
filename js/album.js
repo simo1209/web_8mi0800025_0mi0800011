@@ -75,7 +75,55 @@ async function fetchAlbumImages() {
     }
 }
 
-// Set the download button link
-downloadAlbumBtn.setAttribute('href', `app.php?command=export_album&album_id=${albumId}`);
+document.getElementById('download-album-btn').addEventListener('click', async (event) => {
+    event.preventDefault();
+
+    if (!albumId) {
+        alert("Album ID is missing!");
+        return;
+    }
+
+    try {
+        // Fetch album data
+        const response = await fetch(`app.php?command=export_album&album_id=${albumId}`);
+        const albumData = await response.json();
+
+        if (albumData.error) {
+            alert(albumData.error);
+            return;
+        }
+
+        const zip = new JSZip();
+        const albumFolder = zip.folder(`album_${albumId}`);
+
+        // Add metadata file
+        albumFolder.file("metadata.json", JSON.stringify(albumData, null, 2));
+
+        // Download images and add them to zip
+        const imagePromises = albumData.images.map(async (image) => {
+            const imageResponse = await fetch(image.url);
+            const blob = await imageResponse.blob();
+            albumFolder.file(image.dbname + '.jpg', blob);
+        });
+
+        await Promise.all(imagePromises);
+
+        // Generate ZIP file
+        const zipBlob = await zip.generateAsync({ type: "blob" });
+
+        // Trigger download
+        const downloadLink = document.createElement("a");
+        downloadLink.href = URL.createObjectURL(zipBlob);
+        downloadLink.download = `album_${albumId}.zip`;
+        document.body.appendChild(downloadLink);
+        downloadLink.click();
+        document.body.removeChild(downloadLink);
+
+    } catch (error) {
+        console.error("Error exporting album:", error);
+        alert("Failed to export album.");
+    }
+});
+
 
 fetchAlbumImages();
