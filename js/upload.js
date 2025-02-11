@@ -515,4 +515,4 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 
-document.getElementById('editGeo').addEventListener('shown.bs.modal', initMap);
+document.getElementById('editGeo').addEventListener('shown.bs.modal', (e) => initMap() );

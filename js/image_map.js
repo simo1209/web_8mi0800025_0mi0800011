@@ -63,7 +63,7 @@ function initMap() {
         }).addTo(map);
 
         for (const image of images) {
-            let geoDataWithRandomNoise = Object.values(JSON.parse(image.geo_data));
+            let geoDataWithRandomNoise = Object.values(JSON.parse(image.geo_data)).map(Number);
             geoDataWithRandomNoise[0] += Math.random() * 0.0001;
             geoDataWithRandomNoise[1] += Math.random() * 0.0001;
             let marker = L.marker(geoDataWithRandomNoise, { draggable: false }).addTo(map);

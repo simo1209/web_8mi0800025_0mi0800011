@@ -58,9 +58,14 @@ async function fetchAlbumImages() {
             imageCard.querySelector('.image-card').addEventListener('click', () => viewImage(image));
             imageCard.querySelector('.image-description').textContent = image.descr;
 
-            imageCard.querySelector('.card-body a').setAttribute(
+            imageCard.querySelector('.card-body .edit-image').setAttribute(
                 'href',
                 `edit.html?image_id=${image.dbname}`
+            );
+
+            imageCard.querySelector('.card-body .image-map').setAttribute(
+                'href',
+                `image_map.html?image_id=${image.dbname}`
             );
 
 
